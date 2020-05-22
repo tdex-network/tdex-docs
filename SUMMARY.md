@@ -6,7 +6,7 @@
 ## Trader
 * [Get started](trader.md)
 * [Tdex CLI](tdex-cli.md)
-  * [Install](tdex-cli.md#installation)
+  * [Install](tdex-cli.md#install)
   * [Commands](tdex-cli.md#commands)
 * [Tdex SDK](tdex-sdk.md)
   * [JavaScript](tdex-sdk.md#javascript)
@@ -17,11 +17,12 @@
 
 ## Liquidity Provider
 
-* [Get started](provider.md)
 * [Tdex Daemon](tdex-daemon.md)
-* [Tdex Operator CLI](tdex-cli-operator.md)
-  * [Install](tdex-cli-operator.md#install)
-  * [Commands](tdex-cli-operator.md#commands)
+  * [Docker](tdex-daemon.md#docker)
+  * [Standalone](tdex-daemon.md#standalone)
+  * [Usage](tdex-daemon.md#usage)
+  * [Available Options](tdex-daemon.md#available-options)
+  * [Deposit funds](tdex-daemon.md#deposit-funds)
 
 
 ## Contribute

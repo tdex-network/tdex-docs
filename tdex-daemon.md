@@ -1,1 +1,111 @@
-# Tdex Daemon
+# 💸 TDEX Daemon
+Daemon implementation to execute automated market marking strategies on top of TDEX
+
+
+## Docker
+
+#### Pull from Docker Hub 
+
+```sh
+$ docker pull sevenlab/tdex-daemon
+```
+
+#### Run the container
+
+```sh
+$ docker run -p 9945 -p 9000 -v /data:/root/.tdex-daemon -it sevenlab/tdex-daemon --regtest
+✔ How do you want to store your seed? 🔑 · plain
+info: Trader gRPC server listening on 0.0.0.0:9945
+info: Operator gRPC server listening on 0.0.0.0:9000
+```
+To detach the tty without exiting the shell, use the escape sequence Ctrl+P followed by Ctrl+Q
+
+[Available options](#available-options)
+
+## Standalone
+
+#### Download standalone binary (node/npm not needed)
+
+* [Download latest release for MacOS](https://github.com/Sevenlab/tdex-cli/releases)
+* [Download latest release for Linux amd64](https://github.com/Sevenlab/tdex-cli/releases)
+
+Move into a folder in your PATH (eg. `/usr/bin` or `/usr/local/bin`)
+
+#### Run the binary
+
+```sh
+$ tdex-daemon --regtest
+✔ How do you want to store your seed? 🔑 · plain
+info: Trader gRPC server listening on 0.0.0.0:9945
+info: Operator gRPC server listening on 0.0.0.0:9000
+```
+
+[Available options](#available-options)
+
+
+## Usage
+
+**Data Directory**
+
+Once the daemon is launched it will create a data directory `~/.tdex-daemon` containing the default configuration file `config.json`. It's possible to use a different path for the data directory with the environment variable `TDEX_DAEMON_PATH`.
+
+**Wallet**
+
+It will be created a wallet for the daemon and stored in the chosen data directory in a file `vault.json`.
+You can encrypt it with a password and if you decide to do so the daemon will save it encrypted and shutdown.
+Then start again exporting the environment variable `TDEX_PASSWORD` with the chosen password so the daemon could automatically process incoming swap requests. 
+> DO NOT FORGET THE PASSWORD, OR YOU WILL NOT BE ABLE TO RECOVER YOUR FUNDS
+
+```sh
+$ tdex-daemon --regtest
+✔ How do you want to store your seed? 🔑 · encrypted
+✔ Type your password · ********
+Wallet created! Restart the daemon exporting the env variable TDEX_PASSWORD
+Shutting down...
+✨  Done in 15.15s.
+$ export TDEX_PASSWORD=ChosenPassword
+$ tdex-daemon
+info: Trader gRPC server listening on 0.0.0.0:9945
+info: Operator gRPC server listening on 0.0.0.0:9000
+```
+
+## Available options
+
+```sh
+Options:
+  --help          Show help                                            
+  --version       Show version number                                  
+  --regtest, -r   Run in regtest mode                 
+  --fee, -f       Specify a default fee to be used by markets
+  --explorer, -e  Specify an Electrs HTTP REST endpoint                                         
+```
+> If a `config.json` file already exists in the chosen `datadir` given arguments will be discarded.
+
+
+
+## Deposit funds
+
+To start a market, you need to deposit two reserves for the pair you are providing liquidity for. 
+The initial ratio of two amounts you deposit will represent the starting price you give to that pair. 
+
+From that point on, the **market making strategy will self regulate the trading price**.
+
+You will also need to deposit in a different address an amount of LBTCs used by all markets to pay for transaction fees.
+
+1. Download and install the [`tdex-cli`](tdex-cli.md) 
+2. Connect the CLI to the daemon with the gRPC **operator** interface. 
+```sh
+$ tdex-cli operator connect localhost:9000
+```
+3. Get the deposit address for the fee account and send some L-BTC
+```
+$ tdex-cli operator deposit --fee
+```
+4. Get the deposit address and send L-BTC and other Liquid assets to create and start a `market`
+```sh
+$ tdex-cli operator deposit
+```
+5. Profit! 
+
+
+
