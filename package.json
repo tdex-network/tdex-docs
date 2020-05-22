@@ -1,0 +1,21 @@
+{
+  "name": "tdex-documentation",
+  "version": "1.0.0",
+  "description": "Documentation for TDEX",
+  "main": "index.js",
+  "repository": "https://github.com/Sevenlab/tdex-docs.git",
+  "author": "Marco Argentieri <marco@vulpem.com>",
+  "license": "MIT",
+  "scripts": {
+    "serve": "npx gitbook serve",
+    "build": "npx gitbook build",
+    "pdf": "npx gitbook pdf ./ ./_book/tdex-v$npm_package_version.pdf",
+    "deploy": "npx  cpx CNAME _book/ && npx push-dir --dir=_book --branch=gh-pages"
+  },
+  "devDependencies": {
+    "cpx": "^1.5.0",
+    "gitbook-cli": "^2.3.2",
+    "gitbook-plugin-folding-menu": "^1.0.1",
+    "push-dir": "^0.4.1"
+  }
+}
