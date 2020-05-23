@@ -100,6 +100,27 @@ $ tdex-cli wallet
 $ tdex-cli wallet balance
 ```
 
+### Trade
+
+* Start a swap against the selected provider
+
+```sh
+$ tdex-cli trade 
+=========*** Trade ***==========
+
+✔ Do you want to buy or sell 5ac9? · SELL / BUY
+✔ How much do you want to sell? · 0.5
+Gotcha! You will send LBTC 0.5 and receive USDT 3000
+✔ Are you sure continue? (y/N) · true
+
+Sending Trade proposal to provider...
+Signing with private key...
+Trade completed!
+
+tx hash c05beaea74dcbdb87a8f1f1e598a536517884ebcc15a6061832b77c7f41a30d2
+```
+
+
 ### Swap
 
 * Create a swap request message
@@ -170,23 +191,3 @@ Signing with private key...
 SwapComplete message saved into ./swap_completed.bin
 ```
 
-
-### Trade
-
-* Start a swap against the selected provider
-
-```sh
-$ tdex-cli trade 
-=========*** Trade ***==========
-
-✔ Do you want to buy or sell 5ac9? · SELL / BUY
-✔ How much do you want to sell? · 0.5
-Gotcha! You will send LBTC 0.5 and receive USDT 3000
-✔ Are you sure continue? (y/N) · true
-
-Sending Trade proposal to provider...
-Signing with private key...
-Trade completed!
-
-tx hash c05beaea74dcbdb87a8f1f1e598a536517884ebcc15a6061832b77c7f41a30d2
-```
