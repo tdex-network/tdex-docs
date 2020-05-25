@@ -16,7 +16,7 @@ $ docker pull sevenlab/tdex-daemon
 #### Run the container
 
 ```sh
-$ docker run -p 9945 -p 9000 -v /data:/root/.tdex-daemon -it sevenlab/tdex-daemon --regtest
+$ docker run -p 9945:9945 -p 9000:9000 -v /data:/root/.tdex-daemon -it sevenlab/tdex-daemon --regtest
 ✔ How do you want to store your seed? 🔑 · plain
 info: Trader gRPC server listening on 0.0.0.0:9945
 info: Operator gRPC server listening on 0.0.0.0:9000
@@ -35,7 +35,7 @@ See [Available options](#available-options) to configure the daemon.
 
 Move into a folder in your PATH (eg. `/usr/bin` or `/usr/local/bin`)
 
-#### Run the binary
+#### Run the binary
 
 ```sh
 $ tdex-daemon --regtest
