@@ -9,8 +9,8 @@ Not published yet.
 
 **Download standalone binary (node/npm not needed)**
 
-* [Download latest release for MacOS](https://github.com/Sevenlab/tdex-cli/releases)
-* [Download latest release for Linux amd64](https://github.com/Sevenlab/tdex-cli/releases)
+* [Download latest release for MacOS](https://tdex-builds.s3-eu-west-1.amazonaws.com/cli/darwin/tdex-cli)
+* [Download latest release for Linux amd64](https://tdex-builds.s3-eu-west-1.amazonaws.com/cli/linux/tdex-cli)
 
 Move into a folder in your PATH (eg. `/usr/bin` or `/usr/local/bin`)
 

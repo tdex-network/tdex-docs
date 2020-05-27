@@ -30,8 +30,8 @@ See [Available options](#available-options) to configure the daemon.
 
 #### Download standalone binary (node/npm not needed)
 
-* [Download latest release for MacOS](https://github.com/Sevenlab/tdex-cli/releases)
-* [Download latest release for Linux amd64](https://github.com/Sevenlab/tdex-cli/releases)
+* [Download latest release for MacOS](https://tdex-builds.s3-eu-west-1.amazonaws.com/daemon/darwin/tdex-daemon)
+* [Download latest release for Linux amd64](https://tdex-builds.s3-eu-west-1.amazonaws.com/daemon/linux/tdex-daemon)
 
 Move into a folder in your PATH (eg. `/usr/bin` or `/usr/local/bin`)
 
