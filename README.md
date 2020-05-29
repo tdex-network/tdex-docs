@@ -13,4 +13,4 @@ TBD
 
 ## Protocol Specifications
 
-[Contibute to Protocol Specification](https://tdex.sevenlabs.io)
+[Contibute to Protocol Specification](https://specs.tdex.network)

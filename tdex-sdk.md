@@ -18,7 +18,7 @@ Not published yet.
 
 #### Trade
 
-Trade against a Liquidity provider in the TDEX network. This fully implements [**BOTD#4**](https://tdex.sevenlabs.io/04-trade-protocol.html)
+Trade against a Liquidity provider in the TDEX network. This fully implements [**BOTD#4**](https://github.com/Sevenlab/tdex-specs/blob/master/04-trade-protocol.md)
 
 
 ```js
@@ -48,7 +48,7 @@ trade.buy({
 
 #### Swap
 
-Create manually Swap messages without connecting to a provider. This fully implements [**BOTD#3**](https://tdex.sevenlabs.io/03-swap-protocol.html)
+Create manually Swap messages without connecting to a provider. This fully implements [**BOTD#3**](https://github.com/Sevenlab/tdex-specs/blob/master/03-swap-protocol.md)
 
 ```js
 import { Swap } from 'tdex-sdk';
