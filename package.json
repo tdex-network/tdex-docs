@@ -1,6 +1,6 @@
 {
   "name": "tdex-documentation",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Documentation for TDEX",
   "main": "index.js",
   "repository": "https://github.com/Sevenlab/tdex-docs.git",
