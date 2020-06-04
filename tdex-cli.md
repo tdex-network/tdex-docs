@@ -53,7 +53,7 @@ $ tdex-cli info
 * Connect to a liquidity provider
 
 ```sh
-$ tdex-cli connect https://provider.vulpem.com:9945
+$ tdex-cli connect alpha-provider.tdex.network:9945
 ```
 
 ### Market
