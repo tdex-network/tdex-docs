@@ -54,7 +54,7 @@ See [Available options](#available-options) to configure the daemon.
 
 Once the daemon is launched it will create a data directory `~/.tdex-daemon` containing the default configuration file `config.json`. It's possible to use a different path for the data directory with the environment variable `TDEX_DAEMON_PATH`.
 
-#### Wallet
+#### Wallet
 
 It will be created a wallet for the daemon and stored in the chosen data directory in a file called `vault.json`.
 You can encrypt it with a password and if you decide to do so the daemon will save it encrypted and shutdown.
@@ -64,7 +64,7 @@ Then start again exporting the environment variable `TDEX_PASSWORD` with the cho
 **Docker**
 
 ```sh
-$ docker run --rm -v /data:/root/.tdex-daemon -it sevenlab/tdex-daemon --regtest 
+$ docker run --rm -v $(pwd)/data:/root/.tdex-daemon -it sevenlab/tdex-daemon --regtest 
 ✔ How do you want to store your seed? 🔑 · encrypted
 ✔ Type your password · ********
 Wallet created! Restart the daemon exporting the env variable TDEX_PASSWORD
