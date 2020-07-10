@@ -1335,6 +1335,11 @@ gitbook-plugin-folding-menu@^1.0.1:
   resolved "https://registry.yarnpkg.com/gitbook-plugin-folding-menu/-/gitbook-plugin-folding-menu-1.0.1.tgz#79572856c5718714f8a73cbd822e686116bceaed"
   integrity sha512-v4DYQuirkRdC5VvOgNcmHaR56NlllFmli5b82tbmWmLg4j99EUsVrsuc/Z5GEwolkShGZ892uPzqLQ+UmeKxpw==
 
+gitbook-plugin-insert-logo@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/gitbook-plugin-insert-logo/-/gitbook-plugin-insert-logo-0.1.5.tgz#daae8dda41a236d54f13931e570b26729557885a"
+  integrity sha1-2q6N2kGiNtVPE5MeVwsmcpVXiFo=
+
 github-url-from-git@~1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/github-url-from-git/-/github-url-from-git-1.4.0.tgz#285e6b520819001bde128674704379e4ff03e0de"

@@ -3,8 +3,14 @@
   "version": "1.0.2",
   "description": "Documentation for TDEX",
   "main": "index.js",
-  "repository": "https://github.com/Sevenlab/tdex-docs.git",
-  "author": "Marco Argentieri <marco@vulpem.com>",
+  "repository": "https://github.com/tdex-network/tdex-docs.git",
+  "contributors": [
+    {
+      "name": "Marco Argentieri",
+      "email": "marco@vulpem.com",
+      "url": "https://vulpem.com"
+    }
+  ],
   "license": "MIT",
   "scripts": {
     "serve": "npx gitbook serve",
@@ -16,6 +22,7 @@
     "cpx": "^1.5.0",
     "gitbook-cli": "^2.3.2",
     "gitbook-plugin-folding-menu": "^1.0.1",
+    "gitbook-plugin-insert-logo": "^0.1.5",
     "push-dir": "^0.4.1"
   }
 }
