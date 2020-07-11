@@ -18,8 +18,10 @@
 
 * [Get started](provider.md)
 * [Daemon](tdex-daemon.md)
-  * [Install](tdex-daemon.md#install)
-  * [Usage](tdex-daemon.md#usage)
+  * [Overview](tdex-daemon.md#overview)
+  * [Data Directory](tdex-daemon.md#data-directory)
+  * [Run with Docker](tdex-daemon.md#run-with-docker)
+  * [Run standalone](tdex-daemon.md#run-standalone)
   * [Available Options](tdex-daemon.md#available-options)
   * [Deposit funds](tdex-daemon.md#deposit-funds)
 

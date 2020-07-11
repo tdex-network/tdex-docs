@@ -10,13 +10,11 @@ Not published yet.
 **Standalone binary (node/npm not needed)**
 
 
-1. Download the binary
-  * [Download latest release for MacOS](https://tdex-builds.s3-eu-west-1.amazonaws.com/cli/darwin/tdex-cli)
-  * [Download latest release for Linux amd64](https://tdex-builds.s3-eu-west-1.amazonaws.com/cli/linux/tdex-cli)
+1. [Download the latest release for MacOS or Linux](https://github.com/tdex-network/tdex-cli/releases)
 
 2. Move into a folder in your PATH (eg. `/usr/bin` or `/usr/local/bin`)
 
-3. Give executable permission to it eg. `chmod a+x ./tdex-cli`
+3. Give executable permission to it eg. `chmod a+x ./path/to/cli/tdex-cli`
 
 
 By default, the `tdex-cli` will use the `~/.tdex` as data directory.
