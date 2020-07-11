@@ -3,7 +3,7 @@ Daemon implementation to execute automated market marking strategies on top of T
 
 ## Overview
 
-The daemon exposes two HTTP/2 gRPC interfaces, one meant to be public to be consumed by traders that fully implements [BOTD #4](https://github.com/Sevenlab/tdex-specs/blob/master/04-trade-protocol.md) called **trader interface** (by default on the port **9945**) and another private to be consumed by the liquidity provider for internal management called **operator interface** *by default on the port **9000**).
+The daemon exposes two HTTP/2 gRPC interfaces, one meant to be public to be consumed by traders that fully implements [BOTD #4](https://github.com/Sevenlab/tdex-specs/blob/master/04-trade-protocol.md) called **trader interface** (by default on the port **9945**) and another private to be consumed by the liquidity provider for internal management called **operator interface** by default on the port **9000**).
 
 
 The daemon has an embedded Liquid wallet and sources blockchain information via a block explorer, at the time of writing, it supports only the [Blockstream fork of Electrs](https://github.com/blockstream/electrs). By default the daemon connects to [Blockstream.info](https://blockstream.info/liquid/api/)
@@ -73,7 +73,7 @@ Shutting down...
 
 ```
 
-The daemon will shut down itself and the container will be removed. Now it's time to run again, mapping the ports, mounting the data directory and passing the chosen password to let the daemon process automatically swaps. 
+The daemon will shut down itself and the container will be removed. Now it's time to run again, mapping the ports, mounting the data directory and passing the chosen password to let the daemon to automatically process incoming swaps. 
 
 #### Start as daemon
 
@@ -88,19 +88,18 @@ $ docker run -d \
     -v `pwd`/data:/root/.tdex-daemon \
     truedex/tdex-daemon
 ```
-
+**NOTICE** You should run this command in case you are restoring from a backup of your data directory.
 
 ### Check the Logs
 
 ```sh
 $ docker logs tdex
-warn: Configuration file already exists at path /root/.tdex-daemon. Given arguments will be discarded
 info: Trader gRPC server listening on 0.0.0.0:9945
 info: Operator gRPC server listening on 0.0.0.0:9000
 ```
 
 
-Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting trades. 
+Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting incoming swaps. 
 
 ## Run standalone
 
@@ -154,6 +153,8 @@ $ tdex-daemon
 info: Trader gRPC server listening on 0.0.0.0:9945
 info: Operator gRPC server listening on 0.0.0.0:9000
 ```
+**NOTICE** You should run this command in case you are restoring from a backup of your data directory.
+
 
 Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting trades. 
 

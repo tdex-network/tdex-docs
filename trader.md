@@ -5,7 +5,7 @@ The *market makers* are called **liquidity providers** in the TDEX network and t
 A **Trader** proposes new swaps using the provider's market rate. A trader can come and go, he only needs to support the [swap protocol defined in the BOTD #3](https://github.com/Sevenlab/tdex-specs/blob/master/03-swap-protocol.md) and he can swap between the two assets in the **Market** in either direction by adding to the liquidity reserve of one and withdrawing from the reserve of the other. Traders can either connect directly to a **provider** if they already know the endpoint.
 
 
-**Interact with a Liquidity Providers:**
+**Interact with a Liquidity Provider:**
 
 * [Command line interface](tdex-cli.md)
 * Mobile App (Coming soon)
