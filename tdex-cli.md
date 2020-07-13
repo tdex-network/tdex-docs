@@ -1,11 +1,20 @@
 # 💻 TDEX CLI
 Command line interface for making swaps and trades on TDEX
 
-## Install
+**⬇️ Install from NPM**
 
-**Install from NPM**
+* Install with **yarn**
 
-Not published yet.
+```sh
+$ yarn global add tdex-cli
+```
+
+* Install with **npm**
+
+```sh
+$ npm i -g tdex-cli
+```
+
 
 **Standalone binary (node/npm not needed)**
 
