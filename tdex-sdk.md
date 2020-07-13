@@ -8,11 +8,15 @@ JavaScript SDK for building trader-facing applications on top of TDEX
 
 * Install with **yarn**
 
-Not published yet.
+```sh
+$ yarn add tdex-sdk
+```
 
 * Install with **npm**
 
-Not published yet.
+```sh
+$ npm install --save tdex-sdk
+```
 
 ### 📄 Usage
 
@@ -24,16 +28,30 @@ Trade against a Liquidity provider in the TDEX network. This fully implements [*
 ```js
 import { Trade } from 'tdex-sdk';
 
+// Connect to specific provider and use Blockstream as explorer endpoint.
 const trade = new Trade({
   chain: 'liquid',
-  providerUrl: 'https://tdex.vulpem.com',
+  providerUrl: 'alpha-provider.tdex.network',
   explorerUrl: 'https://blockstream.info/liquid/api',
 });
 
 const LBTC = '6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d';
 const USDT = 'c5870288a7c9eb5db398a5b5e7221feb9753134439e8ed9f569b0eea5a423330';
 const WIF = "...";
+
+// Buy some LBTCs
 trade.buy({
+  market: {
+    baseAsset: LBTC,
+    quoteAsset: USDT,
+  },
+  amount: 0.001,
+  address: 'ex1q583qjfp8pd8wdxh6t6fc6cw536kt3l5t0lz2ua',
+  privateKey: WIF
+});
+
+// Or sell some LBTCs
+trade.sell({
   market: {
     baseAsset: LBTC,
     quoteAsset: USDT,
