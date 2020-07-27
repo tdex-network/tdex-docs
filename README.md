@@ -18,8 +18,8 @@ By contributing to this repository, you agree to license your work under the MIT
 
 ## Get started
 
-### 📈 [`Get started as Trader`](trader.md)
-### 💸 [`Get started as Liquidity Provider`](provider.md)
+###  [`Get started as Trader`](trader.md)
+###  [`Get started as Liquidity Provider`](provider.md)
 
 
 ## Protocol Specifications
