@@ -1,4 +1,4 @@
-# 💸 TDEX Daemon
+#  TDEX Daemon
 Daemon implementation to execute automated market marking strategies on top of TDEX
 
 ## Overview
