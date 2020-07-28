@@ -1,4 +1,4 @@
-# 💻 TDEX CLI
+# TDEX CLI
 Command line interface for making swaps and trades on TDEX
 
 **⬇️ Install from NPM**
