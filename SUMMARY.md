@@ -24,6 +24,7 @@
   * [Run standalone](tdex-daemon.md#run-standalone)
   * [Available Options](tdex-daemon.md#available-options)
   * [Deposit funds](tdex-daemon.md#deposit-funds)
+* [Bonus: Browser Support](tdex-daemon-browser.md)
 
 
 
