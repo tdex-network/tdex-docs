@@ -1,67 +1,108 @@
 # 🛠 TDEX SDK
 
-
-## JavaScript
 JavaScript SDK for building trader-facing applications on top of TDEX
 
-### ⬇️ Install
+## ⬇️ Install
 
 * Install with **yarn**
 
 ```sh
-$ yarn add tdex-sdk
+$ yarn add tdex-sdk@beta
 ```
 
 * Install with **npm**
 
 ```sh
-$ npm install --save tdex-sdk
+$ npm install --save tdex-sdk@beta
 ```
 
-### 📄 Usage
+## 📄 Usage
 
-#### Trade
+### Trade
 
 Trade against a Liquidity provider in the TDEX network. This fully implements [**BOTD#4**](https://github.com/tdex-network/tdex-specs/blob/master/04-trade-protocol.md)
 
 
-```js
-import { Trade } from 'tdex-sdk';
 
-// Connect to specific provider and use Blockstream as explorer endpoint.
+```js
+import { Trade, IdentityType, TradeType } from 'tdex-sdk';
+
+// Connect to specific provider and use Blockstream Esplora to source blockchain data.
+// Change the providerUrl with the one you want to trade with. 
 const trade = new Trade({
-  chain: 'liquid',
-  providerUrl: 'alpha-provider.tdex.network',
+  providerUrl: 'provider.tdex.network:9945',
   explorerUrl: 'https://blockstream.info/liquid/api',
+  identity: {
+    chain: 'liquid',
+    type: IdentityType.PrivateKey,
+    value: { 
+      signingKeyWIF: "<WIF>",
+      blindingKeyWIF: "<WIF>"
+    },
+  },
 });
 
+// Or Use HD wallet from mnemonic for both signign and blinding
+const tradeWithMnemonic = new Trade({
+  providerUrl: 'provider.tdex.network:9945',
+  explorerUrl: 'https://blockstream.info/liquid/api',
+  identity: {
+    chain: 'liquid',
+    type: IdentityType.,
+    value: { 
+      mnemonic:
+      'mutuel ourson soupape vertu atelier dynastie silicium absolu océan légume skier',
+      language: 'french',
+    },
+  },
+});
+
+// Asset hash of the market to trade
 const LBTC = '6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d';
 const USDT = 'c5870288a7c9eb5db398a5b5e7221feb9753134439e8ed9f569b0eea5a423330';
-const WIF = "...";
+
+//BUY = quote asset as input
+// SELL = base asset as input
+//
+// If the type of the trade is BUY it means the base asset will be received by
+// the trader.
+//
+// If the type of the trade is SELL it means the base asset will be sent by
+// the trader.
+const preview = await trade.preview({
+  market,
+  tradeType: TradeType.SELL,
+  amount: 5000000,
+});
+
+console.log(preview)
+/*
+{
+  "amountToBeSent": 5000000,
+  "amountToReceive": 23869047,
+  "amountToReceive": 8217213,
+  "assetToBeSent": "6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d",
+  "assetToReceive": "c5870288a7c9eb5db398a5b5e7221feb9753134439e8ed9f569b0eea5a423330",
+}
+*/
+
+// Sell some LBTCs
+const txid = await trade.sell({
+  market: {
+    baseAsset: LBTC,
+    quoteAsset: USDT,
+  },
+  amount: 100000,//satoshis unit
+});
 
 // Buy some LBTCs
-trade.buy({
+const txid = await trade.buy({
   market: {
     baseAsset: LBTC,
     quoteAsset: USDT,
   },
-  amount: 0.001,
-  address: 'ex1q583qjfp8pd8wdxh6t6fc6cw536kt3l5t0lz2ua',
-  privateKey: WIF
+  amount: 50000, //satoshis unit
 });
-
-// Or sell some LBTCs
-trade.sell({
-  market: {
-    baseAsset: LBTC,
-    quoteAsset: USDT,
-  },
-  amount: 0.001,
-  address: 'ex1q583qjfp8pd8wdxh6t6fc6cw536kt3l5t0lz2ua',
-  privateKey: WIF
-});
-
-
 ```
 
 #### Swap
@@ -85,11 +126,11 @@ const swapRequestMessage = swap.request({
   amountToBeSent: 300,
   assetToReceive: LBTC,
   amountToReceive: 0.05,
-  psbtBase64: "..."
+  psetBase64: "..."
 })
 
 //Bob parses the request and inspect the terms
-const json = Swap.parse({
+let json = Swap.parse({
   message: swapRequestMessage,
   type: 'SwapRequest'
 });
@@ -97,12 +138,12 @@ const json = Swap.parse({
 // Bob provides the transaction with his signed inputs and outputs
 const swapAcceptMessage = swap.accept({
   message: swapRequestMessage,
-  psbtBase64: "..."
+  psetBase64: "..."
 });
 
 
 //Alice can parse again the message and inspect the terms (optional)
-const json = Swap.parse({
+json = Swap.parse({
   message: swapAcceptMessage,
   type: 'SwapAccept'
 });
@@ -110,16 +151,10 @@ const json = Swap.parse({
 // Alice adds his signed inputs to the transaction
 const swapCompleteMessage = swap.complete({
   message: swapAcceptMessage,
-  psbtBase64: "..."
+  psetBase64: "..."
 });
 
 // Alice can sends the completed swap to Bob 
 // Now Bob finalize the transaction and broadcast it 
 
 ```
- 
-## Python
-
-## Go 
-
-## Rust
