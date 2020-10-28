@@ -48,7 +48,7 @@ const tradeWithMnemonic = new Trade({
   explorerUrl: 'https://blockstream.info/liquid/api',
   identity: {
     chain: 'liquid',
-    type: IdentityType.,
+    type: IdentityType.Mnemonic,
     value: { 
       mnemonic:
       'mutuel ourson soupape vertu atelier dynastie silicium absolu océan légume skier',
