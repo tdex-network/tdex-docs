@@ -23,9 +23,10 @@ $ npm install --save tdex-sdk@beta
 Trade against a Liquidity provider in the TDEX network. This fully implements [**BOTD#4**](https://github.com/tdex-network/tdex-specs/blob/master/04-trade-protocol.md)
 
 
+#### With private key
 
 ```js
-import { Trade, IdentityType, TradeType } from 'tdex-sdk';
+import { Trade, IdentityType, TradeType, fetchBalances } from 'tdex-sdk';
 
 // Connect to specific provider and use Blockstream Esplora to source blockchain data.
 // Change the providerUrl with the one you want to trade with. 
@@ -42,20 +43,22 @@ const trade = new Trade({
   },
 });
 
-// Or Use HD wallet from mnemonic for both signign and blinding
-const tradeWithMnemonic = new Trade({
-  providerUrl: 'provider.tdex.network:9945',
-  explorerUrl: 'https://blockstream.info/liquid/api',
-  identity: {
-    chain: 'liquid',
-    type: IdentityType.Mnemonic,
-    value: { 
-      mnemonic:
-      'mutuel ourson soupape vertu atelier dynastie silicium absolu océan légume skier',
-      language: 'french',
-    },
-  },
-});
+// Get a new address and his blinnding private key from identity interface
+const {
+  confidentialAddress,
+  blindingPrivateKey
+} = tradeWithMnemonic.identity.getNextAddress();
+
+// Receiving Address and Change address are the same with Identity.PrivateKey
+const changeAddrAndBlidning = tradeWithMnemonic.identity.getChangeAddress();
+
+
+// Get the balances grouped by assetHash
+const balances = fetchBalances(
+  confidentialAddress,
+  blindingPrivateKey,
+  'https://blockstream.info/liquid/api'
+);
 
 // Asset hash of the market to trade
 const LBTC = '6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d';
@@ -105,7 +108,38 @@ const txid = await trade.buy({
 });
 ```
 
-#### Swap
+#### With Mnemonic (HD Wallet) 
+
+```js
+// Or Use HD wallet from mnemonic for both signign and blinding
+const tradeWithMnemonic = new Trade({
+  providerUrl: 'provider.tdex.network:9945',
+  explorerUrl: 'https://blockstream.info/liquid/api',
+  identity: {
+    chain: 'liquid',
+    type: IdentityType.Mnemonic,
+    value: { 
+      mnemonic:
+      'mutuel ourson soupape vertu atelier dynastie silicium absolu océan légume skier',
+      language: 'french',
+    },
+    initializeFromRestorer: true // Scan the blockchain and restore previous addresses
+  },
+});
+
+// Wait for restore to be be completed. Can take a while.
+try {
+  await tradeWithMnemonic.isRestored();
+} catch(e) {
+  console.error(e);
+}
+
+// Now you can get addresses 
+tradeWithMnemonic.identity.getNextAddress()
+tradeWithMnemonic.identity.getChangeAddress()
+```
+
+### Swap
 
 Create manually Swap messages without connecting to a provider. This fully implements [**BOTD#3**](https://github.com/tdex-network/tdex-specs/blob/master/03-swap-protocol.md)
 
@@ -158,3 +192,6 @@ const swapCompleteMessage = swap.complete({
 // Now Bob finalize the transaction and broadcast it 
 
 ```
+
+
+### Wallet
