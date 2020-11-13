@@ -47,10 +47,10 @@ const trade = new Trade({
 const {
   confidentialAddress,
   blindingPrivateKey
-} = tradeWithMnemonic.identity.getNextAddress();
+} = trade.identity.getNextAddress();
 
 // Receiving Address and Change address are the same with Identity.PrivateKey
-const changeAddrAndBlidning = tradeWithMnemonic.identity.getChangeAddress();
+const changeAddrAndBlidning = trade.identity.getChangeAddress();
 
 
 // Get the balances grouped by assetHash
