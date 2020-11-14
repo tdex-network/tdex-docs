@@ -111,8 +111,6 @@ const txid = await trade.buy({
 #### With Mnemonic (HD Wallet) 
 
 ```js
-import { Trade, IdentityType, EsploraIdentityRestorer, walletFromAddresses, Wallet, fetchUtxos } from 'tdex-sdk';
-
 const explorerUrl = "http://localhost:3001"
 
 // Or Use HD wallet from mnemonic for both signign and blinding
@@ -142,13 +140,14 @@ try {
 // Now you can get addresses 
 tradeWithMnemonic.identity.getNextAddress()
 tradeWithMnemonic.identity.getChangeAddress()
+```
 
-//
-//
-//
+#### Send normal transaction with Mnemonic (HD Wallet) 
+
+```js
+import { walletFromAddresses, Wallet, fetchUtxos } from 'tdex-sdk';
+
 // Let's send to a confidential address a transaction on regtest
-//
-//
 //
 // First we create a Wallet instance using the local cache of the identity abstraction
 const senderWallet = walletFromAddresses(tradeWithMnemonic.identity.getAddresses(), 'regtest');
