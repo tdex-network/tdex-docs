@@ -142,7 +142,7 @@ tradeWithMnemonic.identity.getNextAddress()
 tradeWithMnemonic.identity.getChangeAddress()
 ```
 
-#### Send normal transaction with Mnemonic (HD Wallet) 
+#### Send a confidential transaction with Mnemonic (HD Wallet) 
 
 ```js
 import { walletFromAddresses, Wallet, fetchUtxos } from 'tdex-sdk';
@@ -154,7 +154,7 @@ const senderWallet = walletFromAddresses(tradeWithMnemonic.identity.getAddresses
 
 // then we fetch all utxos
 const arrayOfArrayOfUtxos = await Promise.all(
-  senderWallet.addresses.map((a) => await fetchUtxos(wallet.address, explorerUrl))
+  senderWallet.addresses.map((a) => fetchUtxos(wallet.address, explorerUrl))
 );
 // Flat them
 const utxos = arrayOfArrayOfUtxos.flat();
@@ -164,7 +164,7 @@ const txHexes = await Promise.all(
   utxos.map((utxo) => fetchTxHex(utxo.txid, explorerUrl))
 );
 const outputs = txHexes.map(
-  (hex, index) => Transaction.fromHex(hex).outs[senderUtxos[index].vout]
+  (hex, index) => Transaction.fromHex(hex).outs[utxos[index].vout]
 );
 utxos.forEach((utxo, index) => {
   utxo.prevout = outputs[index];
