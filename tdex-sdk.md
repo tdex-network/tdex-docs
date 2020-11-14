@@ -34,7 +34,7 @@ const trade = new Trade({
   providerUrl: 'provider.tdex.network:9945',
   explorerUrl: 'https://blockstream.info/liquid/api',
   identity: {
-    chain: 'liquid',
+    chain: 'liquid', // or regtest
     type: IdentityType.PrivateKey,
     value: { 
       signingKeyWIF: "<WIF>",
@@ -111,19 +111,24 @@ const txid = await trade.buy({
 #### With Mnemonic (HD Wallet) 
 
 ```js
+import { Trade, IdentityType, EsploraIdentityRestorer, walletFromAddresses, fetchUtxos } from 'tdex-sdk';
+
+const explorerUrl = "http://localhost:3001"
+
 // Or Use HD wallet from mnemonic for both signign and blinding
 const tradeWithMnemonic = new Trade({
-  providerUrl: 'provider.tdex.network:9945',
-  explorerUrl: 'https://blockstream.info/liquid/api',
+  providerUrl: 'localhost:9945',
+  explorerUrl: explorerUrl,
   identity: {
-    chain: 'liquid',
+    chain: 'regtest', // or regtest
     type: IdentityType.Mnemonic,
     value: { 
       mnemonic:
       'mutuel ourson soupape vertu atelier dynastie silicium absolu océan légume skier',
-      language: 'french',
+      language: 'french', // optional
     },
     initializeFromRestorer: true // Scan the blockchain and restore previous addresses
+    restorer: new EsploraIdentityRestorer(explorerUrl)
   },
 });
 
@@ -137,6 +142,47 @@ try {
 // Now you can get addresses 
 tradeWithMnemonic.identity.getNextAddress()
 tradeWithMnemonic.identity.getChangeAddress()
+
+//
+//
+//
+// Let's send to a confidential address a transaction on regtest
+//
+//
+//
+// First we create a Wallet instance using the local cache of the identity abstraction
+const senderWallet = walletFromAddresses(tradeWithMnemonic.identity.getAddresses(), 'regtest');
+
+// then we fetch all utxos
+const arrayOfArrayOfUtxos = await Promise.all(
+  senderWallet.addresses.map((a) => await fetchUtxos(wallet.address, explorerUrl))
+);
+// Flat them
+const utxos = arrayOfArrayOfUtxos.flat();
+
+// lets enrich them with confidential proofs using the prevout tx hexes
+const txHexes = await Promise.all(
+  utxos.map((utxo) => fetchTxHex(utxo.txid, explorerUrl))
+);
+const outputs = txHexes.map(
+  (hex, index) => Transaction.fromHex(hex).outs[senderUtxos[index].vout]
+);
+utxos.forEach((utxo, index) => {
+  utxo.prevout = outputs[index];
+});
+
+
+console.log('Creating and blinding transaction...');
+const tx = senderWallet.createTx();
+const unsignedTx = senderWallet.buildTx(
+  tx, // empty transaction
+  utxos, // enriched unspents
+  "el1qqgptwnszsecmr2klpvmqrmdmczd0gakldxef39425wtztfn7g3rsvpc8me5t8k0wkeaqh0nsnjlxd3kejtqdsln37tjrh9gvr", // recipient confidential address
+  1000, // amount to be sent
+  "el1qqgptwnszsecmr2klpvmqrmdmczd0gakldxef39425wtztfn7g3rsvpc8me5t8k0wkeaqh0nsnjlxd3kejtqdsln37tjrh9gvr", // nigiri regtest LBTC asset hash
+  tradeWithMnemonic.identity.getNextChangeAddress() // change address we own
+);
+
 ```
 
 ### Swap
