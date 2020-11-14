@@ -179,7 +179,7 @@ const unsignedTx = senderWallet.buildTx(
   utxos, // enriched unspents
   "el1qqgptwnszsecmr2klpvmqrmdmczd0gakldxef39425wtztfn7g3rsvpc8me5t8k0wkeaqh0nsnjlxd3kejtqdsln37tjrh9gvr", // recipient confidential address
   1000, // amount to be sent
-  "el1qqgptwnszsecmr2klpvmqrmdmczd0gakldxef39425wtztfn7g3rsvpc8me5t8k0wkeaqh0nsnjlxd3kejtqdsln37tjrh9gvr", // nigiri regtest LBTC asset hash
+  "5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225", // nigiri regtest LBTC asset hash
   tradeWithMnemonic.identity.getNextChangeAddress() // change address we own
 );
 
