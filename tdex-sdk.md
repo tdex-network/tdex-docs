@@ -111,7 +111,7 @@ const txid = await trade.buy({
 #### With Mnemonic (HD Wallet) 
 
 ```js
-import { Trade, IdentityType, EsploraIdentityRestorer, walletFromAddresses, fetchUtxos } from 'tdex-sdk';
+import { Trade, IdentityType, EsploraIdentityRestorer, walletFromAddresses, Wallet, fetchUtxos } from 'tdex-sdk';
 
 const explorerUrl = "http://localhost:3001"
 
@@ -182,6 +182,12 @@ const unsignedTx = senderWallet.buildTx(
   "el1qqgptwnszsecmr2klpvmqrmdmczd0gakldxef39425wtztfn7g3rsvpc8me5t8k0wkeaqh0nsnjlxd3kejtqdsln37tjrh9gvr", // nigiri regtest LBTC asset hash
   tradeWithMnemonic.identity.getNextChangeAddress() // change address we own
 );
+
+// Now we can sign with identity abstraction
+const signedTx = await tradeWithMnemonic.identity.signPset(unsignedTx);
+
+// Finalize and extract tx to be a hex encoeded string ready for broadcast
+const txHex = Wallet.toHex(signedTx);
 
 ```
 
