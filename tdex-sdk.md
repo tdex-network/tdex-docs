@@ -142,15 +142,32 @@ tradeWithMnemonic.identity.getNextAddress()
 tradeWithMnemonic.identity.getChangeAddress()
 ```
 
+### Identity
+
 #### Send a confidential transaction with Mnemonic (HD Wallet) 
 
 ```js
-import { walletFromAddresses, Wallet, fetchUtxos } from 'tdex-sdk';
+import { walletFromAddresses, Wallet, fetchUtxos, Mnemonic, IdentityType } from 'tdex-sdk';
 
 // Let's send to a confidential address a transaction on regtest
-//
+
+const explorerUrl = "http://localhost:3001"
+
+// Create a Identity insatnce of type Mnemonic
+const identity = new Mnemonic({
+    chain: 'regtest', // or regtest
+    type: IdentityType.Mnemonic,
+    value: { 
+      mnemonic:
+      'mutuel ourson soupape vertu atelier dynastie silicium absolu océan légume skier',
+      language: 'french', // optional
+    },
+    initializeFromRestorer: true // Scan the blockchain and restore previous addresses
+    restorer: new EsploraIdentityRestorer(explorerUrl)
+});
+
 // First we create a Wallet instance using the local cache of the identity abstraction
-const senderWallet = walletFromAddresses(tradeWithMnemonic.identity.getAddresses(), 'regtest');
+const senderWallet = walletFromAddresses(identity.getAddresses(), 'regtest');
 
 // then we fetch all utxos
 const arrayOfArrayOfUtxos = await Promise.all(
@@ -179,11 +196,11 @@ const unsignedTx = senderWallet.buildTx(
   "el1qqgptwnszsecmr2klpvmqrmdmczd0gakldxef39425wtztfn7g3rsvpc8me5t8k0wkeaqh0nsnjlxd3kejtqdsln37tjrh9gvr", // recipient confidential address
   1000, // amount to be sent
   "5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225", // nigiri regtest LBTC asset hash
-  tradeWithMnemonic.identity.getNextChangeAddress() // change address we own
+  identity.getNextChangeAddress() // change address we own
 );
 
 // Now we can sign with identity abstraction
-const signedTx = await tradeWithMnemonic.identity.signPset(unsignedTx);
+const signedTx = await identity.signPset(unsignedTx);
 
 // Finalize and extract tx to be a hex encoeded string ready for broadcast
 const txHex = Wallet.toHex(signedTx);
