@@ -166,6 +166,13 @@ const identity = new Mnemonic({
     restorer: new EsploraIdentityRestorer(explorerUrl)
 });
 
+// Wait for restore to be be completed. Can take a while.
+try {
+  await identity.isRestored();
+} catch(e) {
+  console.error(e);
+}
+
 // First we create a Wallet instance using the local cache of the identity abstraction
 const senderWallet = walletFromAddresses(identity.getAddresses(), 'regtest');
 
