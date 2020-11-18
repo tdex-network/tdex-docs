@@ -1,39 +1,29 @@
 # TDEX CLI
 Command line interface for making swaps and trades on TDEX
 
-**⬇️ Install from NPM**
+**⬇️ Install**
 
 * Install with **yarn**
 
 ```sh
-$ yarn global add tdex-cli
+$ yarn global add tdex-cli@beta
 ```
 
 * Install with **npm**
 
 ```sh
-$ npm i -g tdex-cli
+$ npm i -g tdex-cli@beta
 ```
 
 
-**Standalone binary (node/npm not needed)**
-
-
-1. [Download the latest release for MacOS or Linux](https://github.com/tdex-network/tdex-cli/releases)
-
-2. Move into a folder in your PATH (eg. `/usr/bin` or `/usr/local/bin`)
-
-3. Give executable permission to it eg. `chmod a+x ./path/to/cli/tdex-cli`
-
-
-By default, the `tdex-cli` will use the `~/.tdex` as data directory.
+By default, the `tdex-cli` will use the `~/.tdex-cli` as data directory, current state and private key will be stored in there.
 
 **Custom datadir (optional)**
 
 Configure custom directory for data persistence. You should have write permissions. 
 
 ```sh
-$ export TDEX_CLI_PATH=/path/to/data/dir 
+$ export TDEX_CLI_PATH=/absolute/path/to/data/dir 
 $ tdex-cli help
 ```
 
@@ -62,7 +52,7 @@ $ tdex-cli network liquid
 # This uses nigiri.network as explorer
 $ tdex-cli network regtest
 # Custom Esplora 
-$ tdex-cli network regtest --explorer localhost:3001
+$ tdex-cli network regtest --explorer http://localhost:3001
 ```
 
 ### Wallet 
@@ -85,12 +75,18 @@ $ tdex-cli wallet
 $ tdex-cli wallet balance
 ```
 
+* Send from Wallet
+
+```sh
+$ tdex-cli wallet send
+```
+
 ### Provider
 
 * Select and connect to a liquidity provider
 
 ```sh
-$ tdex-cli connect alpha-provider.tdex.network:9945
+$ tdex-cli connect provider.tdex.network:9945
 ```
 From this point, all the commands will work against this selected provider.
 
@@ -122,37 +118,3 @@ $ tdex-cli market price
 ```sh
 $ tdex-cli trade 
 ```
-
-
-### Swap
-
-* Create a swap request message
-
-> NOTICE With the —-output flag you can customize the output file
-
-```sh
-$ tdex-cli swap request
-```
-
-* Import manually a SwapRequest and sign a resulting SwapAccept message
-
-> NOTICE With the —-file flag you can customize the input file.
-
-> NOTICE With the —-output flag you can customize the output file. By defualt the current directory of execution will be used.
-
-```sh
-$ tdex-cli swap accept
-```
-
-* Import a SwapAccept message and sign a resulting SwapComplete message 
-
-> NOTICE With the —-file flag you can customize the input file.
-
-> NOTICE With the —-output flag you can customize the output file. By defualt the current directory of execution will be used.
-
-> NOTICE With the --push flag you can print the hex encoded extracted transaction and broadcast to the network.
-
-```sh
-$ tdex-cli swap complete
-```
-

@@ -50,7 +50,7 @@ const {
 } = trade.identity.getNextAddress();
 
 // Receiving Address and Change address are the same with Identity.PrivateKey
-const changeAddrAndBlidning = trade.identity.getChangeAddress();
+const changeAddrAndBlidning = trade.identity.getNextChangeAddress();
 
 
 // Get the balances grouped by assetHash
@@ -122,24 +122,23 @@ const tradeWithMnemonic = new Trade({
     type: IdentityType.Mnemonic,
     value: { 
       mnemonic:
-      'mutuel ourson soupape vertu atelier dynastie silicium absolu océan légume skier',
-      language: 'french', // optional
+      'deny pyramid explain dragon crane oxygen nature flee version cat fatal kingdom tray suspect broccoli ship rival hard add cruel defy library picture unaware'
     },
-    initializeFromRestorer: true // Scan the blockchain and restore previous addresses
+    initializeFromRestorer: true, // Scan the blockchain and restore previous addresses
     restorer: new EsploraIdentityRestorer(explorerUrl)
   },
 });
 
 // Wait for restore to be be completed. Can take a while.
 try {
-  await tradeWithMnemonic.isRestored();
+  await tradeWithMnemonic.identity.isRestored();
 } catch(e) {
   console.error(e);
 }
 
 // Now you can get addresses 
-tradeWithMnemonic.identity.getNextAddress()
-tradeWithMnemonic.identity.getChangeAddress()
+tradeWithMnemonic.identity.getNextAddress();
+tradeWithMnemonic.identity.getNextChangeAddress();
 ```
 
 ### Identity
@@ -159,10 +158,9 @@ const identity = new Mnemonic({
     type: IdentityType.Mnemonic,
     value: { 
       mnemonic:
-      'mutuel ourson soupape vertu atelier dynastie silicium absolu océan légume skier',
-      language: 'french', // optional
+      'deny pyramid explain dragon crane oxygen nature flee version cat fatal kingdom tray suspect broccoli ship rival hard add cruel defy library picture unaware',
     },
-    initializeFromRestorer: true // Scan the blockchain and restore previous addresses
+    initializeFromRestorer: true, // Scan the blockchain and restore previous addresses
     restorer: new EsploraIdentityRestorer(explorerUrl)
 });
 
@@ -267,6 +265,3 @@ const swapCompleteMessage = swap.complete({
 // Now Bob finalize the transaction and broadcast it 
 
 ```
-
-
-### Wallet

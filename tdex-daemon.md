@@ -3,18 +3,24 @@ Daemon implementation to execute automated market marking strategies on top of T
 
 ## Overview
 
-The daemon exposes two HTTP/2 gRPC interfaces, one meant to be public to be consumed by traders that fully implements [BOTD #4](https://github.com/tdex-network/tdex-specs/blob/master/04-trade-protocol.md) called **trader interface** (by default on the port **9945**) and another private to be consumed by the liquidity provider for internal management called **operator interface** by default on the port **9000**).
-
+The daemon exposes two HTTP/2 gRPC interfaces, one meant to be public to be consumed by traders that fully implements [BOTD #4](https://github.com/tdex-network/tdex-specs/blob/master/04-trade-protocol.md) called **trader interface** (by default on the port **9945**) and another private to be consumed by the liquidity provider for internal management called **operator interface** by default on the port **9000**). 
 
 The daemon has an embedded Liquid wallet and sources blockchain information via a block explorer, at the time of writing, it supports only the [Blockstream fork of Electrs](https://github.com/blockstream/electrs). By default the daemon connects to [Blockstream.info](https://blockstream.info/liquid/api/)
+
+
+**Operator API**
+
+The API for the operator interface are documented [here](https://github.com/TDex-network/tdex-protobuf/blob/beta/docs/docs.md#operator)
+
+
 
 
 ## Data directory
 
 The first time you run the daemon, it creates a **data directory** in `~/.tdex-daemon` and it is used to persist the wallet and the state in an embedded database. 
-It's possible to use a different path for the data directory exporting the environment variable `TDEX_DAEMON_PATH`. If you use docker you must mount the volume pointing to the different chosen path.
+It's possible to use a different path for the data directory exporting the environment variable `TDEX_DATA_DIR_PATH`. If you use docker you must mount the volume pointing to the different chosen path.
 
-**Be sure to backup this data directory to keep your markets running in case of hardware failures and to being able to have access of your funds.**
+**Be sure to replicate this data directory to keep your markets running in case of hardware failures. You can restore the access of your funds and the markets with your mnemonic seed**
 
 ## Run
 
@@ -25,173 +31,179 @@ Use one of the following methods to run a TDEX daemon on your machine:
 
 ## Run with Docker
 
-#### Pull from Docker Hub 
+#### Pull from Github Packages 
 
 ```sh
-$ docker pull truedex/tdex-daemon
+$ docker pull ghcr.io/tdex-network/tdexd:latest
 ```
 
-#### Generate the wallet
-
-This step is needed only the first time to create the data directory, generate and encrypt the wallet and initialize the database. In the following command example the data directory is mounted into the host's current working directory in a folder called `data` that will be created if not exists. Bu sure to have write permissions.
-
-You can pass the [available options](#available-options) to configure the daemon.
-
-
+#### Start the daemon
 
 ```sh
-# Run on Liquid network
-$ docker run --rm -v `pwd`/data:/root/.tdex-daemon -it truedex/tdex-daemon
+# Run on Liquid network connecting to blockstream.info for sourcing blockchain data
+$ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon ghcr.io/tdex-network/tdexd:latest
 
-# Run on Liquid connecting to a different explorer
-$ docker run --rm -v `pwd`/data:/root/.tdex-daemon -it truedex/tdex-daemon --explorer http://localhost:3000
+# Run on Liquid connecting to a local explorer
+$ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001" ghcr.io/tdex-network/tdexd:latest
 
 # Run on Regtest connecting to a different explorer.
-$ docker run --rm -v `pwd`/data:/root/.tdex-daemon -it truedex/tdex-daemon --regtest
---explorer http://localhost:3000
+$ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_NETWORK="regtest" -e TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"  ghcr.io/tdex-network/tdexd:latest
 
-## Run on Liquid and specify a default provider fee
-$ docker run --rm -v `pwd`/data:/root/.tdex-daemon -it truedex/tdex-daemon --fee 0.5
+# Run on Liquid and specify USDt as base asset instead of default L-BTC
+$ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_BASE_ASSET="ce091c998b83c78bb71a632313ba3760f1763d9cfcffae02258ffa9865a37bd2" ghcr.io/tdex-network/tdexd:latest
 ```
 
-#### Encrypt with password
+This will mount the data direcory in a folder called `tdexd` in your current path.
 
-Once the command is launched you need to choose from the interactive shell `▸ Encrypted (AES-128-CBC)` and type in a password used to encrypt your wallet seed.
-
-
-It should look like something like the following:
-
-```sh
-✔ A new wallet will be created and persisted in the chosen data directory. How do you want to store your seed? 🔑 · encrypted
-✔ Type your password · ********
-
-The mnemonic seed has been saved in /root/data/vault.json.
-Be sure to make a safe backup of your data directory, it is the only way to restore your funds
-
-You must restart the daemon exporting the env variable TDEX_PASSWORD
-Shutting down...
-
-```
-
-The daemon will shut down itself and the container will be removed. Now it's time to run again, mapping the ports, mounting the data directory and passing the chosen password to let the daemon to automatically process incoming swaps. 
-
-#### Start as daemon
-
-> Put the right password instead of the `<ChosenPassword>` below.
-
-```sh
-$ docker run -d \
-    --name tdex \
-    --restart unless-stopped \
-    -e TDEX_PASSWORD=<ChosenPassword> \
-    -p 9945:9945 -p 9000:9000 \
-    -v `pwd`/data:/root/.tdex-daemon \
-    truedex/tdex-daemon
-```
-**NOTICE** You should run this command in case you are restoring from a backup of your data directory.
+See [Enviroment Variables](#environment-variables) for all available options. 
 
 ### Check the Logs
 
 ```sh
 $ docker logs tdex
-info: Trader gRPC server listening on 0.0.0.0:9945
-info: Operator gRPC server listening on 0.0.0.0:9000
+INFO[0000] trader interface is listening on :9945
+INFO[0000] operator interface is listening on :9945
 ```
 
-
-Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting incoming swaps. 
+Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting incoming trades. 
 
 ## Run standalone
 
 
 #### Install
 
-1. [Download the latest release for MacOS or Linux](https://github.com/tdex-network/tdex-daemon-alpha/releases)
+1. [Download the latest release for MacOS or Linux](https://github.com/tdex-network/tdex-daemon/releases)
 
-2. Move into a folder in your PATH (eg. `/usr/bin` or `/usr/local/bin`) and rename it as `tdex-daemon`
+2. Move daemon and cli into a folder in your PATH (eg. `/usr/local/bin`) and rename the daemon as `tdexd` and the cli as `tdex`
 
-3. Give executable permission to it eg. `chmod a+x /path/to/daemon/tdex-daemon`
+3. Give executable permissions. (eg. `chmod a+x /usr/local/bin/tdexd` and `chmod a+x /usr/local/bin/tdex`)
 
 
-#### Generate the wallet
+#### Run
 
 ```sh
-# Run on Liquid network
-$ tdex-daemon
+# Run on Liquid network connecting to blockstream.info for sourcing blockchain data
+$ tdexd
 
-# Run on Liquid connecting to a different explorer
-$ tdex-daemon --explorer http://localhost:3000
+# Run on Liquid connecting to a local explorer
+$ export TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"
+$ tdexd 
 
 # Run on Regtest connecting to a different explorer.
-$ tdex-daemon --regtest --explorer http://localhost:3000
+$ export TDEX_NETWORK="regtest" 
+$ export TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"
+$ tdexd
 
-## Run on Liquid and specify a default provider fee
-$ tdex-daemon --fee 0.5
+# Run on Liquid and specify USDt as base asset instead of default L-BTC
+$ export TDEX_BASE_ASSET="ce091c998b83c78bb71a632313ba3760f1763d9cfcffae02258ffa9865a37bd2"
+$ tdexd
 ```
 
-#### Encrypt with password
+This will mount the data direcory in a folder called `.tdex-daemon` in your `$HOME`.
 
-```sh
-✔ A new wallet will be created and persisted in the chosen data directory. How do you want to store your seed? 🔑 · encrypted
-✔ Type your password · ********
+See [Enviroment Variables](#environment-variables) for all available options. 
 
-The mnemonic seed has been saved in /root/data/vault.json.
-Be sure to make a safe backup of your data directory, it is the only way to restore your funds
+Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting incoming trades. 
 
-You must restart the daemon exporting the env variable TDEX_PASSWORD
-Shutting down...
-```
+## Environment variables
 
-
-#### Start
-
-> Put the right password instead of the `<ChosenPassword>` below.
-
-```sh
-$ export TDEX_PASSWORD=<ChosenPassword>
-$ tdex-daemon
-info: Trader gRPC server listening on 0.0.0.0:9945
-info: Operator gRPC server listening on 0.0.0.0:9000
-```
-**NOTICE** You should run this command in case you are restoring from a backup of your data directory.
-
-
-Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting trades. 
-
-
-## Available options
-
-```sh
-Options:
-  --help          Show help                                            
-  --version       Show version number                                  
-  --regtest, -r   Run in regtest mode                 
-  --fee, -f       Specify a default fee to be used by markets
-  --explorer, -e  Specify an Electrs HTTP REST endpoint                                         
-```
-> If a `config.json` file already exists in the chosen `datadir` given arguments will be discarded.
-
-
+TBD
 
 ## Deposit funds
 
-To start a market, you need to deposit two reserves of two **Liquid assets** for the **Market** you are providing liquidity for. 
-The initial ratio of the two amounts you deposit will represent the price of the first trade you accept in.
-From that point on, the **market making strategy will self regulate the trading price**. It follows the *constant product market-making*. In short, this model generates a full order-book based on an initial price for the market. Every transaction that occurs on this market will adjust the prices of the market accordingly. It's a basic supply and demand automated market making system. In the future, anyone could tweak and configure a different market making strategy.
+To start a market, you need to deposit two reserves of two **Liquid assets** for the pair (called **Market**) you are providing liquidity for. Each **Market** has a BASE ASSET, wich is always the same per daemon, and a QUOTE ASSET.
 
-1. Download and install the [`tdex-cli`](tdex-cli.md) 
-2. Connect the CLI to the daemon via the gRPC **operator** interface. 
-```sh
-$ tdex-cli operator connect localhost:9000
-```
-> NOTICE: You need to deposit in a different address, called **FEE ACCOUNT**, an amount of LBTCs used by all markets to pay for transaction fees.
+To determine the spot price you can adopt different startegies, at the moment the supported one are **PLUGGABLE** and **BALANCED**. 
 
-3. Get a deposit address from the FEE ACCOUNT and send some LBTC.
-```
-$ tdex-cli operator deposit --fee
-```
-4. Get a new deposit address from the MARKET ACCOUNT and send LBTC and another Liquid assets to automatically create and make a `market` tradable.
+The PLUGGABLE strategy expects you to update the price manually, plugging in an external price feed that need to call the `UpdateMarketPrice` rpc method of the operator interface. 
+
+The BALANCED strategy (this is the default when you create a market) uses **Automated Market Making** to determine the spot price. The initial ratio of the two amounts you deposit will represent the price of the first trade you accept in.
+From that point on, the **automated market making strategy will self regulate the trading price**. It follows the *constant product market-making* formula. Every transaction that occurs on this market will adjust the prices of the market accordingly. It's a basic supply and demand automated market making system.
+
+
+The following commands will uses the operator cli `tdex` to call the gRPC **operator** interface of `tdexd`. By default running on localhost on port 9000.
+
+
+1. Create a new mnemonic seed (only the first time)
+
 ```sh
-$ tdex-cli operator deposit
+$ tdex genseed
 ```
-5. Profit! 
+
+2. Initialize the wallet (only the first time or after a restore from seed)
+
+```sh
+$ tdex init --seed="<generatedSeed>" --password <mypassword>
+```
+
+3. Unlock the wallet with chosen password
+
+```sh
+$ tdex unlock --password <mypassword>
+```
+
+4. Get a deposit address from the fee account 
+
+```
+$ tdex depositfee
+```
+
+Now send some L-BTC that will be used to subsidize liquid network fees. 
+
+The CLI will create an ephemeral wallet with it to receive, will fragment them and send to the daemon. See [concurrent swap requests](#design.md) for the rationale behind.
+
+5. Get a new deposit address from the MARKET ACCOUNT and send LBTC and another Liquid assets to automatically create and make a `market` tradable.
+
+```sh
+$ tdex depositmarket
+```
+Now send some base asset (by default is L-BTC) and quote asset of choice.
+
+The CLI will create an ephemeral wallet with it to receive, will fragment them and send to the daemon. See [concurrent swap requests](#design.md) for the rationale behind.
+
+
+
+## Manage markets
+
+* Select the market
+
+```sh
+$ tdex market --base_asset=<BaseAssetHash> --quote_asset=<QuoteAssetHash>
+```
+
+Now the following commands will be launch against this market.
+
+* Open the market using automated market making
+
+```sh
+$ tdex open
+```
+This makes the selected market availale for trading using the BALANCED market strategy 
+
+* Close the market
+
+```sh
+$ tdex close
+```
+
+This makes the selected market NOT availale for trading.
+
+* Change market making strategy to pluggable
+
+```sh
+$ tdex strategy --pluggable
+```
+
+* Update the price
+
+```sh
+$ tdex price --base_price=16000 --quote-price=0.001
+```
+This updates the current market price to be used for future trades.
+
+* Open the market again
+
+```sh
+$ tdex open
+```
+
