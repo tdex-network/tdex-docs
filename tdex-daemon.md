@@ -46,8 +46,8 @@ $ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9
 # Run on Liquid connecting to a local explorer
 $ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001" ghcr.io/tdex-network/tdexd:latest
 
-# Run on Regtest connecting to a different explorer.
-$ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_NETWORK="regtest" -e TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"  ghcr.io/tdex-network/tdexd:latest
+# Run on Regtest connecting to a local explorer and using regtest LBTC asset hash.
+$ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_NETWORK="regtest" -e TDEX_BASE_ASSET="5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225" -e TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"  ghcr.io/tdex-network/tdexd:latest
 
 # Run on Liquid and specify USDt as base asset instead of default L-BTC
 $ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_BASE_ASSET="ce091c998b83c78bb71a632313ba3760f1763d9cfcffae02258ffa9865a37bd2" ghcr.io/tdex-network/tdexd:latest
@@ -89,8 +89,9 @@ $ tdexd
 $ export TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"
 $ tdexd 
 
-# Run on Regtest connecting to a different explorer.
+# Run on Regtest connecting to a local explorer and using regtest LBTC asset hash.
 $ export TDEX_NETWORK="regtest" 
+$ export TDEX_BASE_ASSET="5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225"
 $ export TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"
 $ tdexd
 
