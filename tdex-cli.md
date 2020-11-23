@@ -86,7 +86,7 @@ $ tdex-cli wallet send
 * Select and connect to a liquidity provider
 
 ```sh
-$ tdex-cli connect provider.tdex.network:9945
+$ tdex-cli connect https://provider.tdex.network:9945
 ```
 From this point, all the commands will work against this selected provider.
 
