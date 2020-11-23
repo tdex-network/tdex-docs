@@ -108,7 +108,7 @@ Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market
 
 ## Environment variables
 
-TBD
+The list of avialble variables can be found [here](https://pkg.go.dev/github.com/tdex-network/tdex-daemon/config)
 
 ## Deposit funds
 
@@ -124,26 +124,39 @@ From that point on, the **automated market making strategy will self regulate th
 
 The following commands will uses the operator cli `tdex` to call the gRPC **operator** interface of `tdexd`. By default running on localhost on port 9000.
 
+* Initialize the local state of the CLI.
 
-1. Create a new mnemonic seed (only the first time)
+
+```sh
+# By default it looks for the daemon operator gRPC interface on localhost:9000
+$ tdex config init
+```
+
+* You can always check the current state with the following command
+
+```sh
+$ tdex config
+```
+
+* Create a new mnemonic seed (only the first time)
 
 ```sh
 $ tdex genseed
 ```
 
-2. Initialize the wallet (only the first time or after a restore from seed)
+* Initialize the wallet (only the first time or after a restore from seed)
 
 ```sh
 $ tdex init --seed="<generatedSeed>" --password <mypassword>
 ```
 
-3. Unlock the wallet with chosen password
+* Unlock the wallet with chosen password
 
 ```sh
 $ tdex unlock --password <mypassword>
 ```
 
-4. Get a deposit address from the fee account 
+* Get a deposit address from the fee account 
 
 ```
 $ tdex depositfee
@@ -151,16 +164,20 @@ $ tdex depositfee
 
 Now send some L-BTC that will be used to subsidize liquid network fees. 
 
-The CLI will create an ephemeral wallet with it to receive, will fragment them and send to the daemon. See [concurrent swap requests](#design.md) for the rationale behind.
 
-5. Get a new deposit address from the MARKET ACCOUNT and send LBTC and another Liquid assets to automatically create and make a `market` tradable.
+* Get a new deposit address from the MARKET ACCOUNT and send LBTC and another Liquid assets to automatically create and make a `market` tradable.
 
 ```sh
 $ tdex depositmarket
 ```
 Now send some base asset (by default is L-BTC) and quote asset of choice.
 
-The CLI will create an ephemeral wallet with it to receive, will fragment them and send to the daemon. See [concurrent swap requests](#design.md) for the rationale behind.
+
+* You can check the status of the market with the following command
+
+```sh
+$ tdex listmarket
+```
 
 
 
@@ -169,7 +186,14 @@ The CLI will create an ephemeral wallet with it to receive, will fragment them a
 * Select the market
 
 ```sh
-$ tdex market --base_asset=<BaseAssetHash> --quote_asset=<QuoteAssetHash>
+$ tdex config set base_asset=<BaseAssetHash> 
+$ tdex config set quote_asset=<QuoteAssetHash>
+```
+
+You can always check the current state with the following command
+
+```sh
+$ tdex config
 ```
 
 Now the following commands will be launch against this market.
