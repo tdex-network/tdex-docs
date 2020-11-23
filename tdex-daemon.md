@@ -196,8 +196,8 @@ $ tdex listmarket
 * Select the market
 
 ```sh
-$ tdex config set base_asset=<BaseAssetHash> 
-$ tdex config set quote_asset=<QuoteAssetHash>
+$ tdex config set base_asset <BaseAssetHash> 
+$ tdex config set quote_asset <QuoteAssetHash>
 ```
 
 You can always check the current state with the following command
