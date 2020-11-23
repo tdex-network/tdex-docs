@@ -65,6 +65,11 @@ INFO[0000] trader interface is listening on :9945
 INFO[0000] operator interface is listening on :9945
 ```
 
+### Use the operator CLI
+
+```sh
+$ alias tdex='docker exec -it tdexd tdex'
+```
 Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting incoming trades. 
 
 ## Run standalone
@@ -99,10 +104,15 @@ $ tdexd
 $ export TDEX_BASE_ASSET="ce091c998b83c78bb71a632313ba3760f1763d9cfcffae02258ffa9865a37bd2"
 $ tdexd
 ```
-
 This will mount the data direcory in a folder called `.tdex-daemon` in your `$HOME`.
 
 See [Enviroment Variables](#environment-variables) for all available options. 
+
+### Use the operator CLI
+
+```sh
+$ tdex --help
+```
 
 Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting incoming trades. 
 
