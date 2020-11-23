@@ -157,7 +157,7 @@ $ tdex genseed
 * Initialize the wallet (only the first time or after a restore from seed)
 
 ```sh
-$ tdex init --seed="<generatedSeed>" --password <mypassword>
+$ tdex init --seed <generatedSeed> --password <mypassword>
 ```
 
 * Unlock the wallet with chosen password
@@ -175,7 +175,7 @@ $ tdex depositfee
 Now send some L-BTC that will be used to subsidize liquid network fees. 
 
 
-* Get a new deposit address from the MARKET ACCOUNT and send LBTC and another Liquid assets to automatically create and make a `market` tradable.
+* Get a new deposit address from the MARKET ACCOUNT and send LBTC and another Liquid assets. This will create a Market
 
 ```sh
 $ tdex depositmarket
