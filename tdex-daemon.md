@@ -194,13 +194,10 @@ $ tdex listmarket
 ```
 
 
-* Optional: You can get a new deposit address for an already created and fundedd market setting the base_asset and quote_asset into config 
+* Optional: You can get a new deposit address for an already created and funded market passing the optional flag
 
 ```sh
-$ tdex config set base_asset <BaseAssetHash> 
-$ tdex config set quote_asset <QuoteAssetHash>
-# This will return a fresh new address for a market pair already created
-$ tdex depositmarket
+$ tdex depositmarket --base_asset <BaseAssetHash> --quote_asset <QuoteAssetHash>
 ```
 
 
