@@ -140,6 +140,10 @@ The following commands will uses the operator cli `tdex` to call the gRPC **oper
 ```sh
 # By default it looks for the daemon operator gRPC interface on localhost:9000
 $ tdex config init
+# If the daemon is running on regtest
+$ tdex config init --network regtest 
+# or on a remote machine
+$ tdex config init --rpcserver example.com:9000
 ```
 
 * You can always check the current state with the following command
@@ -175,19 +179,30 @@ $ tdex depositfee
 Now send some L-BTC that will be used to subsidize liquid network fees. 
 
 
-* Get a new deposit address from the MARKET ACCOUNT and send LBTC and another Liquid assets. This will create a Market
+* Create a Market and get a new deposit address.
 
 ```sh
 $ tdex depositmarket
 ```
-Now send some base asset (by default is L-BTC) and quote asset of choice.
+Now send some base asset (by default is LBTC) and quote asset of choice in that address, such as USDt or LCAD
 
 
-* You can check the status of the market with the following command
+* You can check the status of the market
 
 ```sh
 $ tdex listmarket
 ```
+
+
+* Optional: You can get a new deposit address for an already created and fundedd market setting the base_asset and quote_asset into config 
+
+```sh
+$ tdex config set base_asset <BaseAssetHash> 
+$ tdex config set quote_asset <QuoteAssetHash>
+# This will return a fresh new address for a market pair already created
+$ tdex depositmarket
+```
+
 
 
 
