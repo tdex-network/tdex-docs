@@ -4,13 +4,13 @@ JavaScript SDK for building trader-facing applications on top of TDEX
 
 ## ⬇️ Install
 
-* Install with **yarn**
+- Install with **yarn**
 
 ```sh
 $ yarn add tdex-sdk@beta
 ```
 
-* Install with **npm**
+- Install with **npm**
 
 ```sh
 $ npm install --save tdex-sdk@beta
@@ -22,23 +22,22 @@ $ npm install --save tdex-sdk@beta
 
 Trade against a Liquidity provider in the TDEX network. This fully implements [**BOTD#4**](https://github.com/tdex-network/tdex-specs/blob/master/04-trade-protocol.md)
 
-
 #### With private key
 
 ```js
-import { Trade, IdentityType, TradeType, fetchBalances } from 'tdex-sdk';
+import { Trade, IdentityType, TradeType, fetchBalances } from "tdex-sdk";
 
 // Connect to specific provider and use Blockstream Esplora to source blockchain data.
-// Change the providerUrl with the one you want to trade with. 
+// Change the providerUrl with the one you want to trade with.
 const trade = new Trade({
-  providerUrl: 'provider.tdex.network:9945',
-  explorerUrl: 'https://blockstream.info/liquid/api',
+  providerUrl: "provider.tdex.network:9945",
+  explorerUrl: "https://blockstream.info/liquid/api",
   identity: {
-    chain: 'liquid', // or regtest
+    chain: "liquid", // or regtest
     type: IdentityType.PrivateKey,
-    value: { 
+    value: {
       signingKeyWIF: "<WIF>",
-      blindingKeyWIF: "<WIF>"
+      blindingKeyWIF: "<WIF>",
     },
   },
 });
@@ -46,23 +45,22 @@ const trade = new Trade({
 // Get a new address and his blinnding private key from identity interface
 const {
   confidentialAddress,
-  blindingPrivateKey
+  blindingPrivateKey,
 } = trade.identity.getNextAddress();
 
 // Receiving Address and Change address are the same with Identity.PrivateKey
 const changeAddrAndBlidning = trade.identity.getNextChangeAddress();
 
-
 // Get the balances grouped by assetHash
 const balances = fetchBalances(
   confidentialAddress,
   blindingPrivateKey,
-  'https://blockstream.info/liquid/api'
+  "https://blockstream.info/liquid/api"
 );
 
 // Asset hash of the market to trade
-const LBTC = '6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d';
-const USDT = 'c5870288a7c9eb5db398a5b5e7221feb9753134439e8ed9f569b0eea5a423330';
+const LBTC = "6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d";
+const USDT = "c5870288a7c9eb5db398a5b5e7221feb9753134439e8ed9f569b0eea5a423330";
 
 //BUY = quote asset as input
 // SELL = base asset as input
@@ -78,7 +76,7 @@ const preview = await trade.preview({
   amount: 5000000,
 });
 
-console.log(preview)
+console.log(preview);
 /*
 {
   "amountToBeSent": 5000000,
@@ -95,7 +93,7 @@ const txid = await trade.sell({
     baseAsset: LBTC,
     quoteAsset: USDT,
   },
-  amount: 100000,//satoshis unit
+  amount: 100000, //satoshis unit
 });
 
 // Buy some LBTCs
@@ -108,71 +106,77 @@ const txid = await trade.buy({
 });
 ```
 
-#### With Mnemonic (HD Wallet) 
+#### With Mnemonic (HD Wallet)
 
 ```js
-const explorerUrl = "http://localhost:3001"
+const explorerUrl = "http://localhost:3001";
 
 // Or Use HD wallet from mnemonic for both signign and blinding
 const tradeWithMnemonic = new Trade({
-  providerUrl: 'localhost:9945',
+  providerUrl: "localhost:9945",
   explorerUrl: explorerUrl,
   identity: {
-    chain: 'regtest', // or regtest
+    chain: "regtest", // or regtest
     type: IdentityType.Mnemonic,
-    value: { 
+    value: {
       mnemonic:
-      'deny pyramid explain dragon crane oxygen nature flee version cat fatal kingdom tray suspect broccoli ship rival hard add cruel defy library picture unaware'
+        "deny pyramid explain dragon crane oxygen nature flee version cat fatal kingdom tray suspect broccoli ship rival hard add cruel defy library picture unaware",
     },
     initializeFromRestorer: true, // Scan the blockchain and restore previous addresses
-    restorer: new EsploraIdentityRestorer(explorerUrl)
+    restorer: new EsploraIdentityRestorer(explorerUrl),
   },
 });
 
 // Wait for restore to be be completed. Can take a while.
 try {
   await tradeWithMnemonic.identity.isRestored();
-} catch(e) {
+} catch (e) {
   console.error(e);
 }
 
-// Now you can get addresses 
+// Now you can get addresses
 tradeWithMnemonic.identity.getNextAddress();
 tradeWithMnemonic.identity.getNextChangeAddress();
 ```
 
 ### Identity
 
-#### Send a confidential transaction with Mnemonic (HD Wallet) 
+#### Send a confidential transaction with Mnemonic (HD Wallet)
 
 ```js
-import { walletFromAddresses, Wallet, fetchUtxos, Mnemonic, IdentityType } from 'tdex-sdk';
+import {
+  walletFromAddresses,
+  Wallet,
+  fetchUtxos,
+  Mnemonic,
+  IdentityType,
+} from "tdex-sdk";
 
 // Let's send to a confidential address a transaction on regtest
 
-const explorerUrl = "http://localhost:3001"
+const explorerUrl = "http://localhost:3001";
 
 // Create a Identity insatnce of type Mnemonic
 const identity = new Mnemonic({
-    chain: 'regtest', // or regtest
-    type: IdentityType.Mnemonic,
-    value: { 
-      mnemonic:
-      'deny pyramid explain dragon crane oxygen nature flee version cat fatal kingdom tray suspect broccoli ship rival hard add cruel defy library picture unaware',
-    },
-    initializeFromRestorer: true, // Scan the blockchain and restore previous addresses
-    restorer: new EsploraIdentityRestorer(explorerUrl)
+  chain: "regtest", // or regtest
+  type: IdentityType.Mnemonic,
+  value: {
+    mnemonic:
+      "deny pyramid explain dragon crane oxygen nature flee version cat fatal kingdom tray suspect broccoli ship rival hard add cruel defy library picture unaware",
+  },
+  initializeFromRestorer: true, // Scan the blockchain and restore previous addresses
+  restorer: new EsploraIdentityRestorer(explorerUrl),
 });
 
 // Wait for restore to be be completed. Can take a while.
 try {
   await identity.isRestored();
-} catch(e) {
+} catch (e) {
   console.error(e);
 }
 
 // First we create a Wallet instance using the local cache of the identity abstraction
-const senderWallet = walletFromAddresses(identity.getAddresses(), 'regtest');
+const senderWallet = walletFromAddresses(identity.getAddresses(), "regtest");
 
 // then we fetch all utxos
 const arrayOfArrayOfUtxos = await Promise.all(
@@ -192,8 +196,7 @@ utxos.forEach((utxo, index) => {
   utxo.prevout = outputs[index];
 });
 
-
-console.log('Creating and blinding transaction...');
+console.log("Creating and blinding transaction...");
 const tx = senderWallet.createTx();
 const unsignedTx = senderWallet.buildTx(
   tx, // empty transaction
@@ -209,7 +212,6 @@ const signedTx = await identity.signPset(unsignedTx);
 
 // Finalize and extract tx to be a hex encoeded string ready for broadcast
 const txHex = Wallet.toHex(signedTx);
-
 ```
 
 ### Swap
@@ -217,51 +219,112 @@ const txHex = Wallet.toHex(signedTx);
 Create manually Swap messages without connecting to a provider. This fully implements [**BOTD#3**](https://github.com/tdex-network/tdex-specs/blob/master/03-swap-protocol.md)
 
 ```js
-import { Swap } from 'tdex-sdk';
+import { Swap } from "tdex-sdk";
 
 const swap = new Swap({ chain: "regtest" });
 
-const LBTC = '5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225';
-const USDT = 'c5870288a7c9eb5db398a5b5e7221feb9753134439e8ed9f569b0eea5a423330';
+const LBTC = "5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225";
+const USDT = "c5870288a7c9eb5db398a5b5e7221feb9753134439e8ed9f569b0eea5a423330";
 
-// Alice starts a swap proposal 
+// Alice starts a swap proposal
 //
-// You need to create and provide an unsigned transaction that has 
+// You need to create and provide an unsigned transaction that has
 // enough inputs to cover amountToBeSent and the desired output
 const swapRequestMessage = swap.request({
   assetToBeSent: USDT,
   amountToBeSent: 300,
   assetToReceive: LBTC,
   amountToReceive: 0.05,
-  psetBase64: "..."
-})
+  psetBase64: "...",
+});
 
 //Bob parses the request and inspect the terms
 let json = Swap.parse({
   message: swapRequestMessage,
-  type: 'SwapRequest'
+  type: "SwapRequest",
 });
 
 // Bob provides the transaction with his signed inputs and outputs
 const swapAcceptMessage = swap.accept({
   message: swapRequestMessage,
-  psetBase64: "..."
+  psetBase64: "...",
 });
-
 
 //Alice can parse again the message and inspect the terms (optional)
 json = Swap.parse({
   message: swapAcceptMessage,
-  type: 'SwapAccept'
+  type: "SwapAccept",
 });
 
 // Alice adds his signed inputs to the transaction
 const swapCompleteMessage = swap.complete({
   message: swapAcceptMessage,
-  psetBase64: "..."
+  psetBase64: "...",
 });
 
-// Alice can sends the completed swap to Bob 
-// Now Bob finalize the transaction and broadcast it 
-
+// Alice can sends the completed swap to Bob
+// Now Bob finalize the transaction and broadcast it
 ```
+
+### Wallet
+
+An easy-to-use transaction builder using to create swap transactions.
+
+#### Create a wallet from an Identity with `walletFromAddresses`
+
+```js
+// Create the identity
+const sender = new PrivateKey({
+  chain: "regtest",
+  type: IdentityType.PrivateKey,
+  value: {
+    signingKeyWIF: "cPNMJD4VyFnQjGbGs3kcydRzAbDCXrLAbvH6wTCqs88qg1SkZT3J",
+    blindingKeyWIF: "cRdrvnPMLV7CsEak2pGrgG4MY7S3XN1vjtcgfemCrF7KJRPeGgW6",
+  },
+});
+
+// Use the addresses to create the wallet
+const senderWallet = walletFromAddresses(sender.getAddresses(), "regtest");
+```
+
+#### Create transaction using the wallet
+
+```js
+// createTx returns an empty transaction.
+const tx = senderWallet.createTx();
+
+// This will add output that send 50000 LBTC satoshis to the recipient address.
+// it will also adds the inputs according to the provided utxos
+const unsignedTx = senderWallet.buildTx(
+  tx,
+  // senderUtxos can be fetched using the explorer endpoint
+  senderUtxos,
+  // the recipient address
+  "el1qqt4rfky0utmv8durktmmg3athy4qfmtqz5xwvsnrty7zhujtxcthdqzncgk7vkfgpvm9varxetmp0mvxkl9tzgxq79n3mdn3v",
+  // the amount to send, in satoshis
+  50000,
+  // the asset hash to send
+  "5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225",
+  // the change address to use
+  sender.getNextChangeAddress().confidentialAddress
+);
+```
+
+#### Utils functions
+
+Wallet exports a set of utils functions such as:
+
+**fetchTxHex(txId, url)**
+Fetch the transaction `txId` using an Esplora endpoint `url`.
+
+**fetchUtxos(address, url)**
+Fetch the uxtos for a given `address` using an Esplora endpoint `url`.
+
+**fetchAndUnblindUtxos(address, blindPrivKey, url)**
+Fetch the uxtos for a given `address` using an Esplora endpoint `url` and unblind them with `blindPrivKey`.
+
+**fetchTxs(address, explorerUrl)**
+Return all the `Transaction` of a given `address` using an Esplora endpoint `explorerUrl`.
+
+**unblindTransaction(tx, blindingPrivateKeys)**
+Try to unblind the Transaction `tx` (using a set of blinding private keys `blindingPrivateKeys`) and return the same transaction with unblinded outputs.
