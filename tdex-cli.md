@@ -4,13 +4,13 @@ Command line interface for making swaps and trades on TDEX
 
 **⬇️ Install**
 
-- Install with **yarn**
+* Install with **yarn**
 
 ```sh
 $ yarn global add tdex-cli@beta
 ```
 
-- Install with **npm**
+* Install with **npm**
 
 ```sh
 $ npm i -g tdex-cli@beta

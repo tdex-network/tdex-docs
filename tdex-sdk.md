@@ -4,7 +4,7 @@ JavaScript SDK for building trader-facing applications on top of TDEX
 
 ## ⬇️ Install
 
-- Install with **yarn**
+* Install with **yarn**
 
 ```sh
 $ yarn add tdex-sdk@beta
@@ -25,7 +25,7 @@ Trade against a Liquidity provider in the TDEX network. This fully implements [*
 #### With private key
 
 ```js
-import { Trade, IdentityType, TradeType, fetchBalances } from "tdex-sdk";
+import { Trade, IdentityType, TradeType, fetchBalances } from 'tdex-sdk';
 
 // Connect to specific provider and use Blockstream Esplora to source blockchain data.
 // Change the providerUrl with the one you want to trade with.
