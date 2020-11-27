@@ -180,7 +180,7 @@ const senderWallet = walletFromAddresses(identity.getAddresses(), "regtest");
 
 // then we fetch all utxos
 const arrayOfArrayOfUtxos = await Promise.all(
-  senderWallet.addresses.map((a) => fetchUtxos(wallet.address, explorerUrl))
+  senderWallet.addresses.map((a) => fetchUtxos(a.confidentialAddress, explorerUrl))
 );
 // Flat them
 const utxos = arrayOfArrayOfUtxos.flat();
@@ -293,6 +293,29 @@ const senderWallet = walletFromAddresses(sender.getAddresses(), "regtest");
 // createTx returns an empty transaction.
 const tx = senderWallet.createTx();
 
+// fetch the utxos for each wallet's address
+const arrayOfArrayOfUtxos = await Promise.all(
+  // fetchUtxos is an utility function using to retreive utxos of a given address (1st argument) from an Esplora endpoint (2nd argument)
+  senderWallet.addresses.map((a) => fetchUtxos(a.confidentialAddress, "https://nigiri.network/liquid/api"))
+);
+// Flat them
+const utxos = arrayOfArrayOfUtxos.flat();
+
+// lets enrich them with confidential proofs using the prevout tx hexes
+// /!\ we need proofs to unblind the utxo outputs.
+// first, fetch the transaction's hex using another Esplora util function: fetchTxHex
+const txHexes = await Promise.all(
+  utxos.map((utxo) => fetchTxHex(utxo.txid, explorerUrl))
+);
+// select the outputs from the hex values using liquidjs-lib
+const outputs = txHexes.map(
+  (hex, index) => Transaction.fromHex(hex).outs[utxos[index].vout]
+);
+// assign the prevout to each utxo
+utxos.forEach((utxo, index) => {
+  utxo.prevout = outputs[index];
+});
+
 // This will add output that send 50000 LBTC satoshis to the recipient address.
 // it will also adds the inputs according to the provided utxos
 const unsignedTx = senderWallet.buildTx(
@@ -309,22 +332,3 @@ const unsignedTx = senderWallet.buildTx(
   sender.getNextChangeAddress().confidentialAddress
 );
 ```
-
-#### Utils functions
-
-Wallet exports a set of utils functions such as:
-
-**fetchTxHex(txId, url)**
-Fetch the transaction `txId` using an Esplora endpoint `url`.
-
-**fetchUtxos(address, url)**
-Fetch the uxtos for a given `address` using an Esplora endpoint `url`.
-
-**fetchAndUnblindUtxos(address, blindPrivKey, url)**
-Fetch the uxtos for a given `address` using an Esplora endpoint `url` and unblind them with `blindPrivKey`.
-
-**fetchTxs(address, explorerUrl)**
-Return all the `Transaction` of a given `address` using an Esplora endpoint `explorerUrl`.
-
-**unblindTransaction(tx, blindingPrivateKeys)**
-Try to unblind the Transaction `tx` (using a set of blinding private keys `blindingPrivateKeys`) and return the same transaction with unblinded outputs.
