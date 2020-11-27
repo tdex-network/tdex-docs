@@ -118,7 +118,7 @@ $ tdex-cli market price
 $ tdex-cli trade
 ```
 
-# BUY/SELL example on regtest with Nigiri
+# Advanced: BUY/SELL example on regtest with Nigiri
 
 This example shows how to buy and sell tokens using a tdex daemon running on a [Nigiri](https://github.com/vulpemventures/nigiri) regtest network and `tdex-cli`.
 
