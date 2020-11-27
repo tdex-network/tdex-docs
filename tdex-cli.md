@@ -120,7 +120,7 @@ $ tdex-cli trade
 
 # BUY/SELL example
 
-This example shows how to buy and sell tokens using a tdex daemon running on a **Nigiri** regtest.
+This example shows how to buy and sell tokens using a tdex daemon running on a [Nigiri](https://github.com/vulpemventures/nigiri) regtest network.
 
 ### Run the daemon
 
