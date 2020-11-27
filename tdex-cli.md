@@ -120,7 +120,7 @@ $ tdex-cli trade
 
 # BUY/SELL example
 
-This example shows how to buy and sell tokens using a tdex daemon running on a [Nigiri](https://github.com/vulpemventures/nigiri) regtest network.
+This example shows how to buy and sell tokens using a tdex daemon running on a [Nigiri](https://github.com/vulpemventures/nigiri) regtest network and `tdex-cli`.
 
 ### Run the daemon
 
@@ -190,7 +190,7 @@ $ ./build/tdex-linux-amd64 config set quote_asset ALTCOIN_ASSET_HASH_HERE
 $ ./build/tdex-linux-amd64 open
 ```
 
-Congrats! The daemon is running and has a tradable market LBT/ALTCOIN.
+Congrats! The daemon is running and has a tradable market LBTC/ALTCOIN.
 
 ### Use `tdex-cli` to trade
 
@@ -208,7 +208,7 @@ $ tdex-cli wallet address
 $ nigiri faucet --liquid TRADER_ADDRESS_HERE
 ```
 
-Now our trader account owns LBTC, so he can use `trade` to SELL them (and so buy some altcoins!)
+Our trader account owns LBTC, thus he can use `trade` to SELL them (and so buy some altcoins!).
 
 ```sh
 # list the market available
@@ -220,7 +220,7 @@ $ tdex-cli market LBTC-6f02
 $ tdex-cli trade
 ```
 
-I've sent 1 LBTC and receive 50.125 ALTCOIN ! Now I can using them to BUY some LBTC:
+We have sent 1 LBTC and receive 50.125 ALTCOINs ! Now I BUY some LBTC using my ALTCOINs:
 
 ```sh
 # Select the BUY option this time!
