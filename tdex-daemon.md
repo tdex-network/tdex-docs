@@ -70,7 +70,7 @@ INFO[0000] operator interface is listening on :9945
 ```sh
 $ alias tdex='docker exec -it tdexd tdex'
 ```
-Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting incoming trades. 
+Now you are ready to [deposit funds](#deposit-funds) to create your first market and start accepting incoming trades. 
 
 ## Run standalone
 
@@ -114,7 +114,7 @@ See [Enviroment Variables](#environment-variables) for all available options.
 $ tdex --help
 ```
 
-Now you are ready to [deposit funds](#deposit-funds) to create your fisrt market and start accepting incoming trades. 
+Now you are ready to [deposit funds](#deposit-funds) to create your first market and start accepting incoming trades. 
 
 ## Environment variables
 
