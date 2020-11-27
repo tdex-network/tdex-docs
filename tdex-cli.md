@@ -118,7 +118,7 @@ $ tdex-cli market price
 $ tdex-cli trade
 ```
 
-# BUY/SELL example
+# BUY/SELL example on regtest with Nigiri
 
 This example shows how to buy and sell tokens using a tdex daemon running on a [Nigiri](https://github.com/vulpemventures/nigiri) regtest network and `tdex-cli`.
 
@@ -227,4 +227,3 @@ We have sent 1 LBTC and receive 50.125 ALTCOINs ! Now I BUY some LBTC using my A
 $ tdex-cli trade
 # and follow the instructions, try to buy 1 BTC
 ```
-
