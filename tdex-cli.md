@@ -59,7 +59,7 @@ $ tdex-cli network regtest --explorer http://localhost:3001
 - Create or Restore Wallet
 
 ```sh
-$ tdex-cli wallet init
+$ tdex-cli wallet
 ```
 
 - Generate a new address
