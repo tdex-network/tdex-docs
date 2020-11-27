@@ -192,7 +192,7 @@ $ ./build/tdex-linux-amd64 open
 
 Congrats! The daemon is running and has a tradable market LBT/ALTCOIN.
 
-3. Use `tdex-cli` to trade some SELL some LBTC
+3. Use `tdex-cli` to trade
 
 Now we will use `tdex-cli`, the CLI for traders.
 
