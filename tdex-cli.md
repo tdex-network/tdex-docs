@@ -168,7 +168,7 @@ Well, now let's create a market:
 
 ```sh
 # first create an empty market
-$ ./build/tdex-linux-amd64 depositmarket --base_asset "" --quote_asset ""
+$ ./build/tdex-linux-amd64 depositmarket
 # this will return an address, we need to send it some LBTC and some ALTCOIN
 # again, let's use nigiri for that
 # let's fund the market address with LBTC
