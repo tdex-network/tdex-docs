@@ -7,13 +7,13 @@ Command line interface for making swaps and trades on TDEX
 * Install with **yarn**
 
 ```sh
-$ yarn global add tdex-cli@beta
+$ yarn global add tdex-cli
 ```
 
 * Install with **npm**
 
 ```sh
-$ npm i -g tdex-cli@beta
+$ npm i -g tdex-cli
 ```
 
 By default, the `tdex-cli` will use the `~/.tdex-cli` as data directory, current state and private key will be stored in there.
