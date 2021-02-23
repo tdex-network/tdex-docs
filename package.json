@@ -24,5 +24,11 @@
     "gitbook-plugin-folding-menu": "^1.0.1",
     "gitbook-plugin-insert-logo": "^0.1.5",
     "push-dir": "^0.4.1"
+  },
+  "resolutions": {
+    "**/graceful-fs": "^4.2.4"
+  },
+  "engines": {
+    "node": "10.x.x"
   }
 }
