@@ -5,7 +5,7 @@ Daemon implementation to execute automated market marking strategies on top of T
 
 The daemon exposes two HTTP/2 gRPC interfaces, one meant to be public to be consumed by traders that fully implements [BOTD #4](https://github.com/tdex-network/tdex-specs/blob/master/04-trade-protocol.md) called **trader interface** (by default on the port **9945**) and another private to be consumed by the liquidity provider for internal management called **operator interface** by default on the port **9000**).
 
-The daemon has an embedded Liquid wallet and sources blockchain information via a block explorer, at the time of writing, it supports only the [Blockstream fork of Electrs](https://github.com/blockstream/electrs). By default the daemon connects to [Blockstream.info](https://blockstream.info/liquid/api/)
+The daemon has an embedded Liquid wallet and sources blockchain information via a block explorer. At the time of writing the supported explorers are the [Blockstream fork of Electrs](https://github.com/blockstream/electrs), and the Elements node. By default the first is used and the daemon connects to [Blockstream.info](https://blockstream.info/liquid/api/)
 
 
 **Operator API**
@@ -116,6 +116,21 @@ $ tdex --help
 
 Now you are ready to [deposit funds](#deposit-funds) to create your first market and start accepting incoming trades.
 
+## NEW: Run with Elements node as explorer
+
+It is now possible to connect the daemon directly to an Elements node instead of sourcing blockchain data from the default electrs explorer.
+You can use the `TDEX_ELEMENTS_RPC_ENDPOINT` env var to set the endpoint for connecting the daemon to the node. Currently, only insecure connection (no TLS encryption) is available.
+In the special case you need to restore an already used wallet, you can also make use of the `TDEX_ELEMENTS_START_RESCAN_TIMESTAMP` to set the node's starting point of the rescan.
+If you'll create a brand new wallet you can leave that variable unset. Be aware that the restore phase can take up to several hours to complete, depending how far in the past you set the rescan timestamp. You can even rescan the entire blockchain using the `0` value, but this is highly discouraged, 
+
+### Run
+
+```sh
+export TDEX_ELEMENTS_RPC_ENDPOINT="http://admin:pass@127.0.0.1:8332"
+export TDEX_ELEMENTS_START_RESCAN_TIMESTAMP=1606780800 # Tue Dec 01 2020 00:00:00 GMT+0000
+tdexd
+```
+
 ## Environment variables
 
 The list of available variables can be found [here](https://pkg.go.dev/github.com/tdex-network/tdex-daemon/config)
@@ -162,6 +177,12 @@ $ tdex genseed
 
 ```sh
 $ tdex init --seed <generatedSeed> --password <mypassword>
+```
+
+* **OR** import and restore an existing wallet
+
+```sh
+$ tdex init --seed <mySeed> --password <mypassword> --restore
 ```
 
 * Unlock the wallet with chosen password
