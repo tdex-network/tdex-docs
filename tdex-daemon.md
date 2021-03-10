@@ -5,15 +5,22 @@ Daemon implementation to execute automated market marking strategies on top of T
 
 The daemon exposes two HTTP/2 gRPC interfaces, one meant to be public to be consumed by traders that fully implements [BOTD #4](https://github.com/tdex-network/tdex-specs/blob/master/04-trade-protocol.md) called **trader interface** (by default on the port **9945**) and another private to be consumed by the liquidity provider for internal management called **operator interface** by default on the port **9000**).
 
-The daemon has an embedded Liquid wallet and sources blockchain information via a block explorer, at the time of writing, it supports only the [Blockstream fork of Electrs](https://github.com/blockstream/electrs). By default the daemon connects to [Blockstream.info](https://blockstream.info/liquid/api/)
+The daemon has an embedded Liquid wallet and sources blockchain information via a block explorer. At the time of writing the supported explorers are the [Blockstream fork of Electrs](https://github.com/blockstream/electrs), and the Elements node. By default the first is used and the daemon connects to [Blockstream.info](https://blockstream.info/liquid/api/)
 
+### NEW: Elements node as explorer
+
+From version 0.2.0, it is possible to connect the daemon directly to an Elements node instead of sourcing blockchain data from the default Electrs explorer.
+You must use the `TDEX_ELEMENTS_RPC_ENDPOINT` env var to set the endpoint for connecting the daemon to the node.  
+Currently, only insecure connection (no TLS encryption) is available,  therefore is highly suggested to run both the daemon and the Elements node in a local trusted network.  
+Restoring a wallet using this kind of block explorer is not supported yet, thus you MUST create a brand new wallet for the daemon.
+
+It is mandatory to tweak the node's configuration with `server=1` to let it serve daemon's requests during its lifetime. It's highly suggested to also change the `rpcworkqueue` from its default value (`16`) to `128` or `256`, to let the node being able to serve more concurrent requests at the same time (this is something that won't always be necessary in future versions).
+
+You might want to look at [tdex-box](https://github.com/Tdex-network/tdex-box.git), a docker-compose solution for running a daemon in a production environment, which comes with an already configured Elements node along with other services.
 
 **Operator API**
 
 The API for the operator interface are documented [here](https://github.com/TDex-network/tdex-protobuf/blob/beta/docs/docs.md#operator)
-
-
-
 
 ## Data directory
 
@@ -45,6 +52,9 @@ $ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9
 
 # Run on Liquid connecting to a local explorer
 $ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001" ghcr.io/tdex-network/tdexd:latest
+
+# Run on Liquid connecting to a local Elements node
+$ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v 'pwd'/tdexd:/.tdexd -e TDEX_ELEMENTS_RPC_ENDPOINT="http://rpcuser:rpcpassword@127.0.0.1:7041" ghcr.io/tdex-network/tdexd:latest
 
 # Run on Regtest connecting to a local explorer and using regtest LBTC asset hash.
 $ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_NETWORK="regtest" -e TDEX_BASE_ASSET="5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225" -e TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"  ghcr.io/tdex-network/tdexd:latest
@@ -92,6 +102,10 @@ $ tdexd
 
 # Run on Liquid connecting to a local explorer
 $ export TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"
+$ tdexd
+
+# Run on Liquid connecting to a local Elements node
+$ export TDEX_ELEMENTS_RPC_ENDPOINT="http://rpcuser:rpcpassword@127.0.0.1:7041"
 $ tdexd
 
 # Run on Regtest connecting to a local explorer and using regtest LBTC asset hash.
@@ -162,6 +176,12 @@ $ tdex genseed
 
 ```sh
 $ tdex init --seed <generatedSeed> --password <mypassword>
+```
+
+* **OR** import and restore an existing wallet
+
+```sh
+$ tdex init --seed <mySeed> --password <mypassword> --restore
 ```
 
 * Unlock the wallet with chosen password
