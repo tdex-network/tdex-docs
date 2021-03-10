@@ -7,13 +7,18 @@ The daemon exposes two HTTP/2 gRPC interfaces, one meant to be public to be cons
 
 The daemon has an embedded Liquid wallet and sources blockchain information via a block explorer. At the time of writing the supported explorers are the [Blockstream fork of Electrs](https://github.com/blockstream/electrs), and the Elements node. By default the first is used and the daemon connects to [Blockstream.info](https://blockstream.info/liquid/api/)
 
+### NEW: Elements node as explorer
+
+From version 0.2.0, it is possible to connect the daemon directly to an Elements node instead of sourcing blockchain data from the default Electrs explorer.
+You can use the `TDEX_ELEMENTS_RPC_ENDPOINT` env var to set the endpoint for connecting the daemon to the node.  
+Currently, only insecure connection (no TLS encryption) is available,  therefore is highly suggested to run both the daemon and the Elements node in a local trusted network.  
+Restoring a wallet using this kind of block explorer is not supported yet, thus you MUST create a brand new wallet for the daemon.
+
+It is mandatory to tweak the node's configuration with `server=1` to let it serve daemon's requests during its lifetime. It's highly suggested to also change the `rpcworkqueue` from its default value (`16`) to `128` or `256`, to let the node being able to serve more concurrent requests at the same time (this is something that won't always be necessary in future versions).
 
 **Operator API**
 
 The API for the operator interface are documented [here](https://github.com/TDex-network/tdex-protobuf/blob/beta/docs/docs.md#operator)
-
-
-
 
 ## Data directory
 
@@ -45,6 +50,9 @@ $ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9
 
 # Run on Liquid connecting to a local explorer
 $ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001" ghcr.io/tdex-network/tdexd:latest
+
+# Run on Liquid connecting to a local Elements node
+$ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v 'pwd'/tdexd:/.tdexd -e TDEX_ELEMENTS_RPC_ENDPOINT="http://rpcuser:rpcpassword@127.0.0.1:7041" ghcr.io/tdex-network/tdexd:latest
 
 # Run on Regtest connecting to a local explorer and using regtest LBTC asset hash.
 $ docker run -it -d --name tdexd --restart unless-stopped -p 9945:9945 -p 9000:9000 -v `pwd`/tdexd:/.tdex-daemon -e TDEX_NETWORK="regtest" -e TDEX_BASE_ASSET="5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225" -e TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"  ghcr.io/tdex-network/tdexd:latest
@@ -94,6 +102,10 @@ $ tdexd
 $ export TDEX_EXPLORER_ENDPOINT="http://127.0.0.1:3001"
 $ tdexd
 
+# Run on Liquid connecting to a local Elements node
+$ export TDEX_ELEMENTS_RPC_ENDPOINT="http://rpcuser:rpcpassword@127.0.0.1:7041"
+$ tdexd
+
 # Run on Regtest connecting to a local explorer and using regtest LBTC asset hash.
 $ export TDEX_NETWORK="regtest"
 $ export TDEX_BASE_ASSET="5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225"
@@ -115,21 +127,6 @@ $ tdex --help
 ```
 
 Now you are ready to [deposit funds](#deposit-funds) to create your first market and start accepting incoming trades.
-
-## NEW: Run with Elements node as explorer
-
-It is now possible to connect the daemon directly to an Elements node instead of sourcing blockchain data from the default electrs explorer.
-You can use the `TDEX_ELEMENTS_RPC_ENDPOINT` env var to set the endpoint for connecting the daemon to the node. Currently, only insecure connection (no TLS encryption) is available.
-In the special case you need to restore an already used wallet, you can also make use of the `TDEX_ELEMENTS_START_RESCAN_TIMESTAMP` to set the node's starting point of the rescan.
-If you'll create a brand new wallet you can leave that variable unset. Be aware that the restore phase can take up to several hours to complete, depending how far in the past you set the rescan timestamp. You can even rescan the entire blockchain using the `0` value, but this is highly discouraged, 
-
-### Run
-
-```sh
-export TDEX_ELEMENTS_RPC_ENDPOINT="http://admin:pass@127.0.0.1:8332"
-export TDEX_ELEMENTS_START_RESCAN_TIMESTAMP=1606780800 # Tue Dec 01 2020 00:00:00 GMT+0000
-tdexd
-```
 
 ## Environment variables
 
