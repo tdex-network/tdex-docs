@@ -16,6 +16,8 @@ Restoring a wallet using this kind of block explorer is not supported yet, thus 
 
 It is mandatory to tweak the node's configuration with `server=1` to let it serve daemon's requests during its lifetime. It's highly suggested to also change the `rpcworkqueue` from its default value (`16`) to `128` or `256`, to let the node being able to serve more concurrent requests at the same time (this is something that won't always be necessary in future versions).
 
+You might want to look at [tdex-box](https://github.com/Tdex-network/tdex-box.git), a docker-compose solution for running a daemon in a production environment, which comes with an already configured Elements node along with other services.
+
 **Operator API**
 
 The API for the operator interface are documented [here](https://github.com/TDex-network/tdex-protobuf/blob/beta/docs/docs.md#operator)
