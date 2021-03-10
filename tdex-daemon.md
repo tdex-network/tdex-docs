@@ -10,7 +10,7 @@ The daemon has an embedded Liquid wallet and sources blockchain information via 
 ### NEW: Elements node as explorer
 
 From version 0.2.0, it is possible to connect the daemon directly to an Elements node instead of sourcing blockchain data from the default Electrs explorer.
-You can use the `TDEX_ELEMENTS_RPC_ENDPOINT` env var to set the endpoint for connecting the daemon to the node.  
+You must use the `TDEX_ELEMENTS_RPC_ENDPOINT` env var to set the endpoint for connecting the daemon to the node.  
 Currently, only insecure connection (no TLS encryption) is available,  therefore is highly suggested to run both the daemon and the Elements node in a local trusted network.  
 Restoring a wallet using this kind of block explorer is not supported yet, thus you MUST create a brand new wallet for the daemon.
 
