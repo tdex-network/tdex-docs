@@ -198,14 +198,28 @@ $ tdex depositfee
 
 Now send some L-BTC that will be used to subsidize liquid network fees.
 
+* Claim the deposits for the fee account
+
+```
+$ tdex claimfee --outpoints '[{"hash": <txid>, "index": <vout>}]'
+```
 
 * Create a Market and get a new deposit address.
 
 ```sh
 $ tdex depositmarket
 ```
-Now send some base asset (by default is LBTC) and quote asset of choice in that address, such as USDt or LCAD
 
+Now send some base asset (by default is LBTC) and quote asset of choice in that address, such as USDt or LCAD.
+
+* Claim the deposits for the market
+
+```
+$ tdex config set base_asset <BaseAssetHash>
+$ tdex config set quote_asset <QuoteAssetHash>
+
+$ tdex claimmarket --outpoints '[{"hash": <txid>, "index": <vout>}, {...}]'
+```
 
 * You can check the status of the market
 
@@ -219,9 +233,6 @@ $ tdex listmarket
 ```sh
 $ tdex depositmarket --base_asset <BaseAssetHash> --quote_asset <QuoteAssetHash>
 ```
-
-
-
 
 ## Manage markets
 
