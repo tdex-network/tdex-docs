@@ -155,7 +155,7 @@ The following commands will uses the operator cli `tdex` to call the gRPC **oper
 # By default it looks for the daemon operator gRPC interface on localhost:9000
 $ tdex config init
 # If the daemon is running on regtest
-$ tdex config init --network regtest
+$ tdex config init --network regtest --explorer_url http://localhost:3001
 # or on a remote machine
 $ tdex config init --rpcserver example.com:9000
 ```
@@ -190,36 +190,72 @@ $ tdex init --seed <mySeed> --password <mypassword> --restore
 $ tdex unlock --password <mypassword>
 ```
 
-* Get a deposit address from the fee account
+* You can manually deposit funds to the daemon wallet:
 
-```
-$ tdex depositfee
-```
+  - Get a deposit address from the fee account
 
-Now send some L-BTC that will be used to subsidize liquid network fees.
+  ```
+  $ tdex depositfee
+  ```
 
-* Claim the deposits for the fee account
+  Now send some L-BTC that will be used to subsidize liquid network fees.
 
-```
-$ tdex claimfee --outpoints '[{"hash": <txid>, "index": <vout>}]'
-```
+  - Claim the deposits for the fee account
 
-* Create a Market and get a new deposit address.
+  ```
+  $ tdex claimfee --outpoints '[{"hash": <txid>, "index": <vout>}]'
+  ```
 
-```sh
-$ tdex depositmarket
-```
+  v Create a Market and get a new deposit address.
 
-Now send some base asset (by default is LBTC) and quote asset of choice in that address, such as USDt or LCAD.
+  ```sh
+  $ tdex depositmarket
+  ```
 
-* Claim the deposits for the market
+  Now send some base asset (by default is LBTC) and quote asset of choice in that address, such as USDt or LCAD.
 
-```
-$ tdex config set base_asset <BaseAssetHash>
-$ tdex config set quote_asset <QuoteAssetHash>
+  - Claim the deposits for the market
 
-$ tdex claimmarket --outpoints '[{"hash": <txid>, "index": <vout>}, {...}]'
-```
+  ```
+  $ tdex config set base_asset <BaseAssetHash>
+  $ tdex config set quote_asset <QuoteAssetHash>
+
+  $ tdex claimmarket --outpoints '[{"hash": <txid>, "index": <vout>}, {...}]'
+  ```
+
+### NEW: CONCURRENT SWAP REQUESTS
+
+You can make use of the fragmenter tool, an interactive process that let's you send all the funds to a temporary wallet that splits the total amount into smaller fragments, increasing the capabilities of the daemon to serve an higher number of concurrent trade requests:
+
+  * Get a temporary address to send fee account's funds to:
+
+  ```bash
+  $ tdex fragmentfee
+  ```
+
+   After having generated and showed the temporary wallet's address, the commands waits for you to insert the txid of the funding tx(s).  
+   Press _ENTER_ to confirm and continue the process in order to calculate the optimal number of fragments based on the amount detected and send the fragmented deposits to the daemon's fee account.
+
+  NOTICE: If, for any reason, the process fails (like for example you pasted the wrong txid) you can resume it with:
+  
+  ```bash
+  $ tdex fragmentfee --txid <txid1> --txid <txid2> ...
+  ```
+
+    The process is smart enough to recognize if any previous one exited before being completed. In that case, it expects you to resume by providing the list of funding txids. If this time everything's allright, the process will complete as described above, otherwise you'll need to repeat the reseume again. Only after a fragmentation process is completed, it is possible to go for anotherone.
+
+  * Get a temporary address to send market's funds to:
+
+  ```bash
+  $ tdex fragmentmarket
+  # INFO[0000] send funds to address: el1qqf9w40vhwnq0rjejfuv0l4hlhgc6zwdacftra5yd3rakl8s3y0pn3078ul8jh5dhfg7rpceu2xt8wyx92wz9swqsm2p6fcjvq
+  # INFO[0000] Enter txid of fund(s) separated by a white space [press ENTER to skip or confirm]:
+  ```
+
+    Fund the temporary wallet's address and insert the txid of the funding txs.  
+    Press _ENTER_ to confirm and continue the process in order to calculate the optimal number of fragments and to send the fragmented deposits to the daemon's market account.
+
+  NOTICE: If, for any reason, the process fails, the same resume flow described above applies for `fragmentmarket --txid <txid1> ...`.
 
 * You can check the status of the market
 

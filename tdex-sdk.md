@@ -7,13 +7,13 @@ JavaScript SDK for building trader-facing applications on top of TDEX
 * Install with **yarn**
 
 ```sh
-$ yarn add tdex-sdk@beta
+$ yarn add tdex-sdk
 ```
 
 - Install with **npm**
 
 ```sh
-$ npm install --save tdex-sdk@beta
+$ npm install --save tdex-sdk
 ```
 
 ## 📄 Usage
