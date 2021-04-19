@@ -223,33 +223,20 @@ $ tdex unlock --password <mypassword>
   $ tdex claimmarket --outpoints '[{"hash": <txid>, "index": <vout>}, {...}]'
   ```
 
-* Or, you can make use of the fragmenter tool, an interactive process that let's you send all the funds to a temporary wallet that splits the total amount into smaller fragments, increasing the capabilities of the daemon to serve an higher number of concurrent trade requests:
+### NEW: CONCURRENT SWAP REQUESTS
 
-  - Get a temporary address to send fee account's funds to:
+You can make use of the fragmenter tool, an interactive process that let's you send all the funds to a temporary wallet that splits the total amount into smaller fragments, increasing the capabilities of the daemon to serve an higher number of concurrent trade requests:
+
+  * Get a temporary address to send fee account's funds to:
 
   ```bash
   $ tdex fragmentfee
-  # INFO[0000] send funds to address: el1qqdh6v5h0srg0prcgq8ql5nxsa9huqwupv67fl2r08gvs6g2uu8ezcm699gjltgyajrmuq049830ldx8nkl22jzss0qldtljck
-  # INFO[0000] Enter txid of fund(s) separated by a white space [press ENTER to skip or confirm]:
   ```
 
    After having generated and showed the temporary wallet's address, the commands waits for you to insert the txid of the funding tx(s).  
    Press _ENTER_ to confirm and continue the process in order to calculate the optimal number of fragments based on the amount detected and send the fragmented deposits to the daemon's fee account.
 
-  ```bash
-  # INFO[0000] Enter txid of fund(s) separated by a white space [press ENTER to skip or confirm]:
-  $ b8e9b718fa2626e25d7f734d2a0d04606c959047f552406267dd4bf9a819b95e 9b9edbdfb154493101139c092c428fa9a958441174ef069dae26b84eb4080572
-  # INFO[0013] base asset 5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225 funded with value 100000000
-  # INFO[0013] calculating fragments...
-  # INFO[0013] detected 1 fund(s) of total amount 100000000 that will be split into 150 fragments
-  # INFO[0013] crafting transaction...
-  # INFO[0036] fee account funding txid: ae9ce6d35da811d8ed6009dc66a96df4d37fd5316e6b8d732c3a76f484c57375
-  # INFO[0036] waiting for tx to get confirmed...
-  # INFO[0056] claiming fee deposits...
-  # INFO[0075] done
-  ```
-
-    If, for any reason, the process fails (like for example you pasted the wrong txid) you can resume it with:
+  NOTICE: If, for any reason, the process fails (like for example you pasted the wrong txid) you can resume it with:
   
   ```bash
   $ tdex fragmentfee --txid <txid1> --txid <txid2> ...
@@ -257,7 +244,7 @@ $ tdex unlock --password <mypassword>
 
     The process is smart enough to recognize if any previous one exited before being completed. In that case, it expects you to resume by providing the list of funding txids. If this time everything's allright, the process will complete as described above, otherwise you'll need to repeat the reseume again. Only after a fragmentation process is completed, it is possible to go for anotherone.
 
-  - Get a temporary address to send market's funds to:
+  * Get a temporary address to send market's funds to:
 
   ```bash
   $ tdex fragmentmarket
@@ -268,22 +255,7 @@ $ tdex unlock --password <mypassword>
     Fund the temporary wallet's address and insert the txid of the funding txs.  
     Press _ENTER_ to confirm and continue the process in order to calculate the optimal number of fragments and to send the fragmented deposits to the daemon's market account.
 
-  ```bash
-  # INFO[0000] Enter txid of fund(s) separated by a white space [press ENTER to skip or confirm]:
-  $ fe3fceda46bca022b6a54e85a50a130f2056a8a7e1fd2c0cf4b4a29d9115a2f9 fc86e07df9b5f5df30eb36c303a51e5fea8719aedc8a1f6c110e56802e1829fa
-  # INFO[0136] calculating fragments...
-  # INFO[0136] detected 2 coins that will be split into 22 fragments
-  # INFO[0136] base asset amount 100000000 will be split into 11 fragments
-  # INFO[0136] quote asset amount 1000000000000 will be split into 11 fragments
-  # INFO[0136] crafting transaction...
-  # INFO[0140] sending transaction...
-  # INFO[0140] market account funding txid: c08ba2f9402c689e47b941b3fc0bc175f4b8634d3116e0d57d32cef556ac1dac
-  # INFO[0140] waiting for tx to get confirmed...
-  # INFO[0160] claiming market deposits...
-  # INFO[0162] done
-  ```
-
-    If, for any reason, the process fails, the same resume flow described above applies for `fragmentmarket --txid <txid1> ...`.
+  NOTICE: If, for any reason, the process fails, the same resume flow described above applies for `fragmentmarket --txid <txid1> ...`.
 
 * You can check the status of the market
 
