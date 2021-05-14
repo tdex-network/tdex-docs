@@ -81,7 +81,6 @@ console.log(preview);
 {
   "amountToBeSent": 5000000,
   "amountToReceive": 23869047,
-  "amountToReceive": 8217213,
   "assetToBeSent": "6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d",
   "assetToReceive": "c5870288a7c9eb5db398a5b5e7221feb9753134439e8ed9f569b0eea5a423330",
 }
