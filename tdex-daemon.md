@@ -72,7 +72,7 @@ See [Enviroment Variables](#environment-variables) for all available options.
 ```sh
 $ docker logs tdex
 INFO[0000] trader interface is listening on :9945
-INFO[0000] operator interface is listening on :9945
+INFO[0000] operator interface is listening on :9000
 ```
 
 ### Use the operator CLI
